@@ -59,6 +59,8 @@ class Excel2Json:
     sheet: worksheet.Worksheet = None
     # 表头结构体
     sheetStruct: SheetStruct = None
+	# 所有json文件列表
+    cfgListJson = "cfglist.json"
 
     def __init__(self, xlsxUrl: str) -> None:
         self.xlslUrl = xlsxUrl
@@ -233,7 +235,9 @@ class Excel2Json:
 
         with open(outputRoot + "/" + nameList.clientName, "w", encoding='utf-8') as outfile:
             json.dump(obj, outfile, indent=2, ensure_ascii=False)
-            # outfile.write(json.dumps(obj, indent=4, ensure_ascii=True))
+            # outfile.write(json.dumps(obj, indent=4, ensure_ascii=True))		
+        
+        self.dealCfglistJson(nameList.clientName)
 
     def dealLuaData(self, obj: dict) -> None:
         """ 导出lua数据 """
@@ -252,6 +256,32 @@ class Excel2Json:
         wf.write(luaStr + json2lua.dic_to_lua_str(obj))
         wf.close()
 
+    def dealCfglistJson(self, clientName: str) -> None:
+        """ 处理 cfglist.json 文件 """
+        # print(clientName)
+        cfglistjsonDir = os.path.join(outputRoot + "/" + self.cfgListJson)
+        if not os.path.exists(cfglistjsonDir):
+            # 第一次写入cfglist.json文件，w写入方式
+            with open(cfglistjsonDir, 'w', encoding='utf-8') as outfile:
+                ary=[clientName] # json文件名数组
+                json.dump(ary, outfile, indent=2, ensure_ascii=False)
+        else:
+            # cfglist.json文件存在
+            newJsonAry = []
+            with open(cfglistjsonDir, "r") as cfglistjson:
+                jsonAry: list = json.load(cfglistjson) # 这里若是文件空的，读入就会有问题 待处理
+                if clientName not in jsonAry:
+                    jsonAry.append(clientName) # 导出的json未存在，则加入
+                    jsonAry.sort() # 排序
+                    newJsonAry = jsonAry
+            # 重新写入 （和上面一步整合）
+            if newJsonAry and len(newJsonAry)> 0:
+                with open(cfglistjsonDir, 'w') as cfglistjson:
+                    json.dump(newJsonAry, cfglistjson, indent=2, ensure_ascii=False) 
+
+    def dealConfigTs(self) -> None:
+        """ 导出config.d.ts文件 待处理 """
+        print('处理ts接口文件')
 
 if __name__ == '__main__':
     # print(sys.argv)
