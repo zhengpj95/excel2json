@@ -1,6 +1,6 @@
 # excel2json
 
-excel 导出 json 文件
+## excel 导出 json 文件
 
 说明：
 
@@ -16,3 +16,19 @@ excel 导出 json 文件
 
 
 目前支持拖动 xlsx 文件到 build.bat 中进行导出。暂不支持点击 build.bat 导出xlsx所在目录下的全部xlsx。
+
+## python语法
+
+os.path.exists(path) 如果路径 path 存在，返回 True；如果路径 path 不存在或损坏，返回 False。
+
+os.path.getsize(path) 返回文件大小，如果文件不存在就返回错误
+
+`__file__` 文件路径
+
+`__dir__` 目录路径
+
+os.path.join(path1[, path2[, ...]])	把目录和文件名合成一个路径
+
+os.path.normcase(path) 转换path的大小写和斜杠
+
+os.path.normpath(path)	规范path字符串形式
