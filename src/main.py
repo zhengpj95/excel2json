@@ -254,17 +254,27 @@ class Excel2Json:
 
 
 if __name__ == '__main__':
-    print(sys.argv)
+    # print(sys.argv)
 
-    # todo
-    xlsxUrl = "./test.xlsx"
-    outputRoot = "./output"
-
-    if sys.argv and len(sys.argv) > 1 and sys.argv[1]:
-        xlsxUrl = sys.argv[1]
-    if sys.argv and len(sys.argv) > 1 and sys.argv[2]:
-        outputRoot = sys.argv[2]
+    if sys.argv and len(sys.argv) > 2:
+        # 倒入单独excel表导出
+        if sys.argv and len(sys.argv) > 1 and sys.argv[1]:
+            xlsxUrl = os.path.join(sys.argv[1])
+        if sys.argv and len(sys.argv) > 2 and sys.argv[2]:
+            outputRoot = os.path.join(sys.argv[2])
+    else:
+        # 运行所有的excel todo 测试
+        currentpath = os.path.abspath(__file__)
+        dirname = os.path.dirname(currentpath)
+        xlsxUrl = os.path.normcase(os.path.join(dirname, "../test.xlsx"))
+        outputRoot = os.path.normcase(os.path.join(dirname, "../output"))
 
     # print(xlsxUrl, outputRoot)
+
+    # 若导出路径不存在，创建
+    if not os.path.exists(outputRoot):
+        os.makedirs(outputRoot)
+
+    # 开始处理excel表
     excel2Json = Excel2Json(xlsxUrl)
     excel2Json.readFile()
