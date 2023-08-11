@@ -3,6 +3,7 @@
 """
 
 import os
+import re
 
 # 导出文件
 tsconfigfilename = 'config.ts'
@@ -50,8 +51,24 @@ def dealConfigTs(struct: TsconfigStruct) -> None:
     tsStr = tsStr + '\n}'
     # print(tsStr)  
     # TODO (还需继续处理，新增的，字段有变化的)
-    tsconfigDir = os.path.normpath(
-        os.path.join(outputRoot + '/' + tsconfigfilename))
+    tsconfigDir = os.path.normpath(os.path.join(outputRoot + '/' + tsconfigfilename))
     with open(tsconfigDir, 'w', encoding='utf-8') as writefile:
         writefile.write(tsStr)
     print('export ' + tsconfigfilename +' successful!!!')
+
+# TODO  测试，读取 config.ts 文件
+def readCinfigTs()-> None:
+    print('start to read config.ts file')
+    fileroot = os.path.normpath(os.path.join(os.path.dirname(__file__), '../output/config.ts'))
+    # regularexp = re.compile(r'interface')
+    with open(fileroot, 'r', encoding = 'utf-8') as readfile:
+        filestr = readfile.read().replace('\t','').replace('\n','').replace('*/', '*/\n').replace('/**','\n/**') # 每个interface单独一行
+        print(filestr)
+        # r'^interface [A-Za-z0-9]+ {[\n\s\S]+}[\n]+$'
+        obj = re.findall(r'interface [A-Za-z0-9]+ \{.*\}$', filestr, re.M|re.I|re.DOTALL) 
+        print('match list: ', obj, len(obj))
+
+# TODO
+if __name__ == '__main__':
+    readCinfigTs()
+
