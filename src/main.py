@@ -10,6 +10,7 @@ import str2list
 import time
 import json2lua
 import os
+import dealtsconfig
 
 
 class SheetStruct:
@@ -131,7 +132,7 @@ class Excel2Json:
         if (not self.sheetStruct):
             return
         # print(sheet.max_row, sheet.max_column)
-        print('开始处理sheet: ', self.sheet.title)
+        print('start to deal sheet: ', self.sheet.title)
 
         if self.sheetStruct.spcialType:
             self.dealSpecailReachRowData()
@@ -297,21 +298,15 @@ class Excel2Json:
 
     def dealConfigTs(self, clientName: str) -> None:
         """ 导出config.d.ts文件 待处理 """
-        print('处理ts接口文件')
-        structDict: dict = self.getDataStruct()
-        tsStr = 'interface ' + clientName.replace('.json','') + '{'
-        for idx in range(0, len(structDict)):
-            data: DataStruct = structDict[idx]
-            if 'C' in data._cs or 'c' in data._cs:
-                valType = data._type
-                if data._type == 'array':
-                    valType = 'any[]'
-                elif data._type == 'object':
-                    valType = 'any'
-                tsStr = tsStr + '\n\treadonly ' + data._name + ': ' + valType
-                print(data._cs, data._type, data._name)
-        tsStr =  tsStr +'\n}'
-        print(tsStr) # TODO
+        print('start to export config.ts file')
+        # 传入结构体
+        structDict: dict = self.getDataStruct() 
+        struct = dealtsconfig.TsconfigStruct()
+        struct.clientName = clientName
+        struct.clientNameDef = self.sheet.title
+        struct.dataObj = structDict
+        struct.outputRoot = outputRoot
+        dealtsconfig.dealConfigTs(struct)
 
 if __name__ == '__main__':
     # print(sys.argv)
