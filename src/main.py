@@ -116,15 +116,15 @@ class Excel2Json:
         row5 = self.getRowValue(self.structRow[1])
         row6 = self.getRowValue(self.structRow[2])
         row7 = self.getRowValue(self.structRow[3])
-        dataStruct = {}
+        dataDict: dict = {}
         self.structColLen = len(row5)
         for i in range(0, len(row5)):
             struct = DataStruct()
             struct._name = row5[i]
             struct._type = row6[i]
             struct._cs = row7[i]
-            dataStruct[i] = struct
-        return dataStruct
+            dataDict[i] = struct
+        return dataDict
 
     def dealSingleSheet(self) -> None:
         """ 处理单张sheet """
@@ -241,6 +241,7 @@ class Excel2Json:
             # outfile.write(json.dumps(obj, indent=4, ensure_ascii=True))
 
         self.dealCfglistJson(nameList.clientName)
+        self.dealConfigTs()
 
     def dealLuaData(self, obj: dict) -> None:
         """ 导出lua数据 """
@@ -297,7 +298,10 @@ class Excel2Json:
     def dealConfigTs(self) -> None:
         """ 导出config.d.ts文件 待处理 """
         print('处理ts接口文件')
-
+        structDict: dict = self.getDataStruct()
+        for idx in range(0, len(structDict)):
+            data: DataStruct = structDict[idx]
+            print(data._cs, data._type, data._name)
 
 if __name__ == '__main__':
     # print(sys.argv)

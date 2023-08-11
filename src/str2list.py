@@ -3,7 +3,6 @@
 如果是number类型的，应该做对应转换
 """
 
-from enum import Flag
 import re
 
 

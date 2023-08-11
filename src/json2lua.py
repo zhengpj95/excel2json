@@ -1,7 +1,6 @@
 """
 把json转化为lua
 """
-import json
 
 
 def space_str(layer):
