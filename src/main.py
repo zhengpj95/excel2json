@@ -241,7 +241,7 @@ class Excel2Json:
             # outfile.write(json.dumps(obj, indent=4, ensure_ascii=True))
 
         self.dealCfglistJson(nameList.clientName)
-        self.dealConfigTs()
+        self.dealConfigTs(nameList.clientName)
 
     def dealLuaData(self, obj: dict) -> None:
         """ 导出lua数据 """
@@ -295,13 +295,23 @@ class Excel2Json:
                     json.dump(newJsonAry, cfglistjson,
                               indent=2, ensure_ascii=False)
 
-    def dealConfigTs(self) -> None:
+    def dealConfigTs(self, clientName: str) -> None:
         """ 导出config.d.ts文件 待处理 """
         print('处理ts接口文件')
         structDict: dict = self.getDataStruct()
+        tsStr = 'interface ' + clientName.replace('.json','') + '{'
         for idx in range(0, len(structDict)):
             data: DataStruct = structDict[idx]
-            print(data._cs, data._type, data._name)
+            if 'C' in data._cs or 'c' in data._cs:
+                valType = data._type
+                if data._type == 'array':
+                    valType = 'any[]'
+                elif data._type == 'object':
+                    valType = 'any'
+                tsStr = tsStr + '\n\treadonly ' + data._name + ': ' + valType
+                print(data._cs, data._type, data._name)
+        tsStr =  tsStr +'\n}'
+        print(tsStr) # TODO
 
 if __name__ == '__main__':
     # print(sys.argv)
