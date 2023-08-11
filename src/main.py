@@ -11,6 +11,7 @@ import time
 import json2lua
 import os
 
+
 class SheetStruct:
     """ 表的导出信息 """
 
@@ -59,7 +60,7 @@ class Excel2Json:
     sheet: worksheet.Worksheet = None
     # 表头结构体
     sheetStruct: SheetStruct = None
-	# 所有json文件列表
+    # 所有json文件列表
     cfgListJson = "cfglist.json"
 
     def __init__(self, xlsxUrl: str) -> None:
@@ -104,14 +105,14 @@ class Excel2Json:
         for i in range(1, columns+1):
             cellValue = self.sheet.cell(row=row, column=i).value
             # 单元格填0是需要导出的
-            if cellValue == None:
+            if cellValue is None:
                 break
             rowData.append(cellValue)
         return rowData
 
     def getDataStruct(self) -> dict:
         """ 导出数据的结构体信息 """
-        row4 = self.getRowValue(self.structRow[0])
+        # row4 = self.getRowValue(self.structRow[0])
         row5 = self.getRowValue(self.structRow[1])
         row6 = self.getRowValue(self.structRow[2])
         row7 = self.getRowValue(self.structRow[3])
@@ -146,7 +147,7 @@ class Excel2Json:
         totalJson = {}
         for row in range(self.startRow, self.sheet.max_row + 1):
             rowData: DataStruct = self.getRowValue(row)
-            if len(rowData) == 0 or rowData[0] == None or 'C' not in rowData[2]:
+            if len(rowData) == 0 or rowData[0] is None or 'C' not in rowData[2]:
                 break
 
             totalJson[rowData[0]] = eachRowJson = {}
@@ -173,21 +174,21 @@ class Excel2Json:
         haveClient = False
         haveServer = False
         for idx in range(0, len(dataStruct)):
-            if haveClient == True and haveServer == True:
+            if haveClient is True and haveServer is True:
                 break
-            if 'C' in dataStruct[idx]._cs and haveClient == False:
+            if 'C' in dataStruct[idx]._cs and haveClient is False:
                 haveClient = True
-            if 'S' in dataStruct[idx]._cs and haveServer == False:
+            if 'S' in dataStruct[idx]._cs and haveServer is False:
                 haveServer = True
 
         totalKey = self.sheetStruct.keyCount  # 表中配置的key数量
         maxRow = self.sheet.max_row
 
         totalJson = {}
-        luaJson = {} # 先生成临时json，再转化为lua
+        luaJson = {}  # 先生成临时json，再转化为lua
         for row in range(self.startRow, maxRow+1):
             rowData = self.getRowValue(row)
-            if len(rowData) == 0 or rowData[0] == None:
+            if len(rowData) == 0 or rowData[0] is None:
                 break
 
             eachRowJson = totalJson
@@ -203,19 +204,21 @@ class Excel2Json:
                 colStruct: DataStruct = dataStruct[col]
                 if 'C' in colStruct._cs:
                     if colStruct._type == 'array':
-                        eachRowJson[colStruct._name] = str2list.strToList(rowData[col])
+                        eachRowJson[colStruct._name] = str2list.strToList(
+                            rowData[col])
                     elif colStruct._type == 'object':
                         eachRowJson[colStruct._name] = json.loads(rowData[col])
                     else:
                         eachRowJson[colStruct._name] = rowData[col]
                 if 'S' in colStruct._cs:
                     if colStruct._type == 'array':
-                        eachLuaJson[colStruct._name] = str2list.strToList(rowData[col])
+                        eachLuaJson[colStruct._name] = str2list.strToList(
+                            rowData[col])
                     elif colStruct._type == 'object':
                         eachLuaJson[colStruct._name] = json.loads(rowData[col])
                     else:
                         eachLuaJson[colStruct._name] = rowData[col]
-        
+
         if haveClient:
             self.dealJsonData(totalJson)
         else:
@@ -235,8 +238,8 @@ class Excel2Json:
 
         with open(outputRoot + "/" + nameList.clientName, "w", encoding='utf-8') as outfile:
             json.dump(obj, outfile, indent=2, ensure_ascii=False)
-            # outfile.write(json.dumps(obj, indent=4, ensure_ascii=True))		
-        
+            # outfile.write(json.dumps(obj, indent=4, ensure_ascii=True))
+
         self.dealCfglistJson(nameList.clientName)
 
     def dealLuaData(self, obj: dict) -> None:
@@ -246,12 +249,13 @@ class Excel2Json:
             print(self.xlslUrl + ' --- 服务端配置名为空 -- 不导出lua')
             return
 
-		# lua说明
-        urlList = self.xlslUrl.split(os.sep) # 获取路径中的xlsx文件名
+            # lua说明
+        urlList = self.xlslUrl.split(os.sep)  # 获取路径中的xlsx文件名
         luaStr = "-- {0}\n-- {1}\n".format(urlList[-1], nameList.serverName)
-        luaStr += "-- %s\n\n" % time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        luaStr += "-- %s\n\n" % time.strftime(
+            "%Y-%m-%d %H:%M:%S", time.localtime())
         luaStr += "return"
-		# json转化为lua
+        # json转化为lua
         wf = open(outputRoot + "/" + nameList.serverName, 'w', 1, 'utf-8')
         wf.write(luaStr + json2lua.dic_to_lua_str(obj))
         wf.close()
@@ -263,13 +267,13 @@ class Excel2Json:
         if not os.path.exists(cfglistjsonDir) or os.path.getsize(cfglistjsonDir) == 0:
             # 第一次写入cfglist.json文件，或者文件为空的。w写入方式
             with open(cfglistjsonDir, 'w', encoding='utf-8') as outfile:
-                ary=[clientName] # json文件名数组
+                ary = [clientName]  # json文件名数组
                 json.dump(ary, outfile, indent=2, ensure_ascii=False)
         else:
             # cfglist.json文件存在
             newJsonAry = []
-            isEmpty = os.path.getsize(cfglistjsonDir) == 0 # 判断文件大小，为0表示为空
-            if isEmpty == True:
+            isEmpty = os.path.getsize(cfglistjsonDir) == 0  # 判断文件大小，为0表示为空
+            if isEmpty is True:
                 print('cfglist.json文件是空的，有问题。请删除cfglist.json文件，重新导出')
                 return
             with open(cfglistjsonDir, "r") as cfglistjson:
@@ -279,19 +283,21 @@ class Excel2Json:
                 #     return
                 # cfglistjson.seek(0) # 重置到文件头
 
-                jsonAry: list = json.load(cfglistjson) # 这里若是文件空的，读入就会有问题 待处理
+                jsonAry: list = json.load(cfglistjson)  # 这里若是文件空的，读入就会有问题 待处理
                 if clientName not in jsonAry:
-                    jsonAry.append(clientName) # 导出的json未存在，则加入
-                    jsonAry.sort() # 排序
+                    jsonAry.append(clientName)  # 导出的json未存在，则加入
+                    jsonAry.sort()  # 排序
                     newJsonAry = jsonAry
             # 重新写入 （和上面一步整合）
-            if newJsonAry and len(newJsonAry)> 0:
+            if newJsonAry and len(newJsonAry) > 0:
                 with open(cfglistjsonDir, 'w') as cfglistjson:
-                    json.dump(newJsonAry, cfglistjson, indent=2, ensure_ascii=False) 
+                    json.dump(newJsonAry, cfglistjson,
+                              indent=2, ensure_ascii=False)
 
     def dealConfigTs(self) -> None:
         """ 导出config.d.ts文件 待处理 """
         print('处理ts接口文件')
+
 
 if __name__ == '__main__':
     # print(sys.argv)
