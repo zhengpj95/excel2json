@@ -10,7 +10,7 @@ import str2list
 import time
 import json2lua
 import os
-import dealtsconfig
+import configts
 
 
 class SheetStruct:
@@ -313,12 +313,12 @@ class Excel2Json:
         # print('start to export config.ts file')
         # 传入结构体
         structDict: dict = self.getDataStruct() 
-        struct = dealtsconfig.TsconfigStruct()
+        struct = configts.ConfigInterfaceStruct()
         struct.clientName = clientName
         struct.clientNameDef = self.sheet.title
         struct.dataObj = structDict
         struct.outputRoot = outputRoot
-        dealtsconfig.dealConfigTs(struct)
+        configts.dealConfigTs(struct)
 
 if __name__ == '__main__':
     # print(sys.argv)

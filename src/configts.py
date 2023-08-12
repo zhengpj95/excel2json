@@ -15,7 +15,7 @@ tmpFileRoot = os.path.normpath(os.path.join(os.path.dirname(__file__), '../tmp/'
 # 隐射文件路径
 tmpFilePath = os.path.normpath(os.path.join(tmpFileRoot, tmpFileName))
 
-class TsconfigStruct:
+class ConfigInterfaceStruct:
     """ 导出config.ts文件的信息 """
 
     # 表名
@@ -35,7 +35,7 @@ class TsconfigStruct:
         pass
 
 
-def dealConfigTs(struct: TsconfigStruct) -> None:
+def dealConfigTs(struct: ConfigInterfaceStruct) -> None:
     """ 导出 config.ts 文件 """
     if not struct:
         return
