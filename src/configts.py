@@ -68,7 +68,7 @@ def dealConfigTs(struct: ConfigInterfaceStruct) -> None:
 
     newtsStr: str = '/** 本文件为导表工具导出，不可手动修改 */\n\n'
     for key in sorted(tmpObj):
-        newtsStr = newtsStr + tmpObj[key] + '\n'
+        newtsStr = newtsStr + tmpObj[key] + '\n\n'
     # print(newtsStr)  
 
     tsconfigDir = os.path.normpath(os.path.join(outputRoot + '/' + configFileName)) # 导出路径

@@ -1,0 +1,61 @@
+{
+  "1001": {
+    "1": {
+      "index": 1001,
+      "step": 1,
+      "guide_type": 2,
+      "effect": "finger",
+      "dir": 0,
+      "finger_dir": 0,
+      "offset": [],
+      "tips": 0,
+      "param": []
+    },
+    "2": {
+      "index": 1001,
+      "step": 2,
+      "guide_type": 2,
+      "effect": "finger",
+      "dir": 0,
+      "finger_dir": 0,
+      "offset": [],
+      "tips": 0,
+      "param": []
+    }
+  },
+  "1002": {
+    "1": {
+      "index": 1002,
+      "step": 1,
+      "guide_type": 2,
+      "effect": "finger",
+      "dir": 0,
+      "finger_dir": 0,
+      "offset": [],
+      "tips": 0,
+      "param": []
+    },
+    "2": {
+      "index": 1002,
+      "step": 2,
+      "guide_type": 2,
+      "effect": "finger",
+      "dir": 0,
+      "finger_dir": 0,
+      "offset": [],
+      "tips": 0,
+      "param": []
+    },
+    "3": {
+      "index": 1002,
+      "step": 3,
+      "guide_type": 2,
+      "effect": "finger",
+      "dir": 0,
+      "finger_dir": 0,
+      "offset": [],
+      "tips": 0,
+      "param": []
+    }
+  }
+}

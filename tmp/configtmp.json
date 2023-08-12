@@ -1,4 +1,6 @@
 {
   "LangConfig.json": "/** 语言包 */\ninterface LangConfig {\n\t/** 名称 */\n\treadonly name: number;\n\t/** 键值 */\n\treadonly value: string;\n\t/** 值1 */\n\treadonly value1: any[];\n\t/** 值2 */\n\treadonly value2: any;\n}",
-  "IconConfig.json": "/** 按钮配置 */\ninterface IconConfig {\n\t/** id */\n\treadonly id: number;\n\t/** 图标 */\n\treadonly icon: string;\n\t/** 常驻红点 */\n\treadonly rp: number;\n\t/** 特效 */\n\treadonly eff: string;\n\t/** 所在group */\n\treadonly grType: string;\n}\n"
+  "IconConfig.json": "/** 按钮配置 */\ninterface IconConfig {\n\t/** id */\n\treadonly id: number;\n\t/** 图标 */\n\treadonly icon: string;\n\t/** 常驻红点 */\n\treadonly rp: number;\n\t/** 特效 */\n\treadonly eff: string;\n\t/** 所在group */\n\treadonly grType: string;\n}",
+  "GuideConfig.json": "/** guide */\ninterface GuideConfig {\n\t/** 引导id */\n\treadonly index: number;\n\t/** 触发条件 */\n\treadonly trigger: number;\n}",
+  "GuideStepConfig.json": "/** guide_step */\ninterface GuideStepConfig {\n\t/** 引导id */\n\treadonly index: number;\n\t/** 引导步骤 */\n\treadonly step: number;\n\t/** 引导类型 */\n\treadonly guide_type: number;\n\t/** 特效 */\n\treadonly effect: string;\n\t/** 文本在目标的那个方向 */\n\treadonly dir: number;\n\t/** 手指在目标的那个方向 */\n\treadonly finger_dir: number;\n\t/** 引导弹窗偏移 */\n\treadonly offset: any[];\n\t/** 引导文本 */\n\treadonly tips: string;\n\t/** 指引参数 */\n\treadonly param: any[];\n}"
 }

@@ -11,6 +11,7 @@ import time
 import json2lua
 import os
 import configts
+import cfglistjson
 
 
 class SheetStruct:
@@ -274,45 +275,14 @@ class Excel2Json:
 
     def dealCfglistJson(self, clientName: str) -> None:
         """ 处理 cfglist.json 文件 """
-        # print(clientName)
-        cfglistjsonDir = os.path.join(outputRoot + "/" + self.cfgListJson)
-        if not os.path.exists(cfglistjsonDir) or os.path.getsize(cfglistjsonDir) == 0:
-            # 第一次写入cfglist.json文件，或者文件为空的。w写入方式
-            with open(cfglistjsonDir, 'w', encoding='utf-8') as outfile:
-                ary = [clientName]  # json文件名数组
-                json.dump(ary, outfile, indent=2, ensure_ascii=False)
-        else:
-            # cfglist.json文件存在
-            newJsonAry = []
-            isEmpty = os.path.getsize(cfglistjsonDir) == 0  # 判断文件大小，为0表示为空
-            if isEmpty is True:
-                print('cfglist.json文件是空的，有问题。请删除cfglist.json文件，重新导出')
-                return
-            with open(cfglistjsonDir, "r") as cfglistjson:
-                # firstChar = cfglistjson.read(1) # 读取第一位字符判断，不存在就表示空文件，读取后记得要处理seek(0)
-                # if not firstChar:
-                #     print('cfglist.json文件是空的，有问题。请删除cfglist.json文件，重新导出')
-                #     return
-                # cfglistjson.seek(0) # 重置到文件头
-
-                jsonAry: list = json.load(cfglistjson)  # 这里若是文件空的，读入就会有问题 待处理
-                if clientName not in jsonAry:
-                    jsonAry.append(clientName)  # 导出的json未存在，则加入
-                    jsonAry.sort()  # 排序
-                    newJsonAry = jsonAry
-            # 重新写入 （和上面一步整合）
-            if newJsonAry and len(newJsonAry) > 0:
-                with open(cfglistjsonDir, 'w') as cfglistjson:
-                    json.dump(newJsonAry, cfglistjson,
-                              indent=2, ensure_ascii=False)
-        
+        # print('start to export cfglist.json file')
+        cfglistjson.dealCfglistJson(clientName, outputRoot)
         print('write ' + self.cfgListJson + ' successful!!!')
 
     def dealConfigTs(self, clientName: str) -> None:
         """ 导出config.d.ts文件 待处理 """
         # print('start to export config.ts file')
-        # 传入结构体
-        structDict: dict = self.getDataStruct() 
+        structDict: dict = self.getDataStruct() # 传入结构体
         struct = configts.ConfigInterfaceStruct()
         struct.clientName = clientName
         struct.clientNameDef = self.sheet.title
@@ -323,6 +293,9 @@ class Excel2Json:
 if __name__ == '__main__':
     # print(sys.argv)
 
+    xlsxUrl: str = ''
+    outputRoot: str = ''
+
     if sys.argv and len(sys.argv) > 2:
         # 倒入单独excel表导出
         if sys.argv and len(sys.argv) > 1 and sys.argv[1]:
@@ -330,7 +303,7 @@ if __name__ == '__main__':
         if sys.argv and len(sys.argv) > 2 and sys.argv[2]:
             outputRoot = os.path.join(sys.argv[2])
     else:
-        # 运行所有的excel todo 测试
+        # 运行所有的excel TODO 测试
         currentpath = os.path.abspath(__file__)
         dirname = os.path.dirname(currentpath)
         xlsxUrl = os.path.normpath(os.path.join(dirname, "../test.xlsx"))
