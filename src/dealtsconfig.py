@@ -47,9 +47,9 @@ def dealConfigTs(struct: TsconfigStruct) -> None:
             elif data._type == 'object':
                 valType = 'any'
             tsStr = tsStr + '\n\t/** ' + data._def + ' */'
-            tsStr = tsStr + '\n\treadonly ' + data._name + ': ' + valType
+            tsStr = tsStr + '\n\treadonly ' + data._name + ': ' + valType + ';'
             print(data._cs, data._type, data._name, data._def)
-    tsStr = tsStr + '\n}'
+    tsStr = tsStr + '\n}\n'
     # print(tsStr)  
     # TODO (还需继续处理，新增的，字段有变化的)
     tsconfigDir = os.path.normpath(os.path.join(outputRoot + '/' + tsconfigfilename))
@@ -58,7 +58,7 @@ def dealConfigTs(struct: TsconfigStruct) -> None:
     print('export ' + tsconfigfilename +' successful!!!')
 
 # TODO  测试，读取 config.ts 文件
-def readCinfigTs()-> None:
+def readCinfigTs() -> None:
     print('start to read config.ts file')
     fileroot = os.path.normpath(os.path.join(os.path.dirname(__file__), '../output/config.ts'))
     # regularexp = re.compile(r'interface')
