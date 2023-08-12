@@ -46,8 +46,9 @@ def dealConfigTs(struct: TsconfigStruct) -> None:
                 valType = 'any[]'
             elif data._type == 'object':
                 valType = 'any'
+            tsStr = tsStr + '\n\t/** ' + data._def + ' */'
             tsStr = tsStr + '\n\treadonly ' + data._name + ': ' + valType
-            # print(data._cs, data._type, data._name)
+            print(data._cs, data._type, data._name, data._def)
     tsStr = tsStr + '\n}'
     # print(tsStr)  
     # TODO (还需继续处理，新增的，字段有变化的)

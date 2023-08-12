@@ -31,6 +31,10 @@ class SheetStruct:
     # 特殊的格式
     def spcialType(self):
         pass
+    
+    # sheet名称
+    def sheetTitle(self):
+        pass
 
 
 class DataStruct:
@@ -46,6 +50,10 @@ class DataStruct:
 
     # 导出字段（S服务端C客户端）
     def _cs(self):
+        pass
+
+    # 字段名注释
+    def _def(self):
         pass
 
 
@@ -96,6 +104,7 @@ class Excel2Json:
         struct.clientName = clientName
         struct.keyCount = keyCount
         struct.spcialType = specialType == 1
+        struct.sheetTitle = self.sheet.title
         self.sheetStruct = struct
         return struct
 
@@ -113,7 +122,7 @@ class Excel2Json:
 
     def getDataStruct(self) -> dict:
         """ 导出数据的结构体信息 """
-        # row4 = self.getRowValue(self.structRow[0])
+        row4 = self.getRowValue(self.structRow[0])
         row5 = self.getRowValue(self.structRow[1])
         row6 = self.getRowValue(self.structRow[2])
         row7 = self.getRowValue(self.structRow[3])
@@ -124,6 +133,7 @@ class Excel2Json:
             struct._name = row5[i]
             struct._type = row6[i]
             struct._cs = row7[i]
+            struct._def = row4[i]
             dataDict[i] = struct
         return dataDict
 
