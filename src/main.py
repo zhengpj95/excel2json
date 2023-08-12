@@ -12,6 +12,7 @@ import json2lua
 import os
 import configts
 import cfglistjson
+from Utils import Utils
 
 
 class SheetStruct:
@@ -297,24 +298,45 @@ if __name__ == '__main__':
     outputRoot: str = ''
 
     if sys.argv and len(sys.argv) > 2:
-        # 倒入单独excel表导出
+        # 拖拽单独excel表导出
         if sys.argv and len(sys.argv) > 1 and sys.argv[1]:
             xlsxUrl = os.path.join(sys.argv[1])
         if sys.argv and len(sys.argv) > 2 and sys.argv[2]:
             outputRoot = os.path.join(sys.argv[2])
+        
+        # 若导出路径不存在，创建
+        if not os.path.exists(outputRoot):
+            os.makedirs(outputRoot)
+
+        # 开始处理excel表
+        excel2Json = Excel2Json(xlsxUrl)
+        excel2Json.readFile()
+
     else:
         # 运行所有的excel TODO 测试
         currentpath = os.path.abspath(__file__)
         dirname = os.path.dirname(currentpath)
-        xlsxUrl = os.path.normpath(os.path.join(dirname, "../test.xlsx"))
+        # xlsxUrl = os.path.normpath(os.path.join(dirname, "../test.xlsx"))
         outputRoot = os.path.normpath(os.path.join(dirname, "../output"))
+
+        # 若导出路径不存在，创建
+        if not os.path.exists(outputRoot):
+            os.makedirs(outputRoot)
+
+        # 遍历处理所有的excel文件
+        xlsxRoot = os.path.normpath(os.path.join(dirname, os.path.pardir, 'xlsx'))
+        xlsxFils = Utils.readFileList(xlsxRoot)
+        for file in xlsxFils:
+            newUrl =os.path.normpath(os.path.join(xlsxRoot, file))
+            excelJson = Excel2Json(newUrl)
+            excelJson.readFile()
 
     # print(xlsxUrl, outputRoot)
 
-    # 若导出路径不存在，创建
-    if not os.path.exists(outputRoot):
-        os.makedirs(outputRoot)
+    # # 若导出路径不存在，创建
+    # if not os.path.exists(outputRoot):
+    #     os.makedirs(outputRoot)
 
-    # 开始处理excel表
-    excel2Json = Excel2Json(xlsxUrl)
-    excel2Json.readFile()
+    # # 开始处理excel表
+    # excel2Json = Excel2Json(xlsxUrl)
+    # excel2Json.readFile()
