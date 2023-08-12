@@ -17,6 +17,11 @@
 
 目前支持拖动 xlsx 文件到 build.bat 中进行导出。暂不支持点击 build.bat 导出xlsx所在目录下的全部xlsx。
 
+## 导出文件说明
+
+1. `output/cfglist.json` 文件，是所有都导出的json文件名集合
+2. `output/config.ts` 文件，是导出的json文件的接口声明文件，便于游戏内使用
+
 ## python语法
 
 os.path.exists(path) 如果路径 path 存在，返回 True；如果路径 path 不存在或损坏，返回 False。
