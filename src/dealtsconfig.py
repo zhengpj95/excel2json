@@ -4,10 +4,16 @@
 
 import os
 import re
+import json
 
-# 导出文件
-tsconfigfilename = 'config.ts'
-
+# 导出文件名
+configFileName = 'config.ts'
+# 隐射文件名
+tmpFileName = "configtmp.json"
+# 缓存文件目录
+tmpFileRoot = os.path.normpath(os.path.join(os.path.dirname(__file__), '../tmp/'))
+# 隐射文件路径
+tmpFilePath = os.path.normpath(os.path.join(tmpFileRoot, tmpFileName))
 
 class TsconfigStruct:
     """ 导出config.ts文件的信息 """
@@ -31,12 +37,16 @@ class TsconfigStruct:
 
 def dealConfigTs(struct: TsconfigStruct) -> None:
     """ 导出 config.ts 文件 """
+    if not struct:
+        return
+
     clientName: str = struct.clientName
     dataObj: dict = struct.dataObj
     outputRoot: str = struct.outputRoot
     clientNameDef: str = struct.clientNameDef
 
-    tsStr = '/** '+clientNameDef+' */\n'
+    # 写入config.ts的内容
+    tsStr = '/** '+clientNameDef+' */\n' 
     tsStr = tsStr + 'interface ' + clientName.replace('.json', '') + ' {'
     for idx in range(0, len(dataObj)):
         data: dict = dataObj[idx]
@@ -48,14 +58,42 @@ def dealConfigTs(struct: TsconfigStruct) -> None:
                 valType = 'any'
             tsStr = tsStr + '\n\t/** ' + data._def + ' */'
             tsStr = tsStr + '\n\treadonly ' + data._name + ': ' + valType + ';'
-            print(data._cs, data._type, data._name, data._def)
-    tsStr = tsStr + '\n}\n'
-    # print(tsStr)  
-    # TODO (还需继续处理，新增的，字段有变化的)
-    tsconfigDir = os.path.normpath(os.path.join(outputRoot + '/' + tsconfigfilename))
+            # print(data._cs, data._type, data._name, data._def)
+    tsStr = tsStr + '\n}'
+
+    tmpObj = readTmpJson()
+    tmpObj[clientName] = tsStr # 写入缓存json文件
+
+    writeTmpJson(tmpObj)
+
+    newtsStr: str = '/** 本文件为导表工具导出，不可手动修改 */\n\n'
+    for key in sorted(tmpObj):
+        newtsStr = newtsStr + tmpObj[key] + '\n'
+    # print(newtsStr)  
+
+    tsconfigDir = os.path.normpath(os.path.join(outputRoot + '/' + configFileName)) # 导出路径
     with open(tsconfigDir, 'w', encoding='utf-8') as writefile:
-        writefile.write(tsStr)
-    print('export ' + tsconfigfilename +' successful!!!')
+        writefile.write(newtsStr)
+    print('write ' + configFileName +' successful!!!')
+
+
+def readTmpJson() -> dict:
+    """ 读取一份本地缓存文件，所有的导出到config.ts的json文件，都映射一个key-vale，方便下回写入 """
+    if not os.path.exists(tmpFileRoot):
+        os.mkdir(tmpFileRoot)
+
+    if not os.path.exists(tmpFilePath):
+        return {}
+    with open(tmpFilePath, 'r', encoding='utf-8') as readfile:
+        jsonobj = json.load(readfile)
+        return jsonobj
+
+
+def writeTmpJson(obj: dict) -> None:
+    """ 写入缓存文件 """
+    with open(tmpFilePath, 'w', encoding='utf-8') as writefile:
+        json.dump(obj, writefile, indent=2,ensure_ascii=False)
+
 
 # TODO  测试，读取 config.ts 文件
 def readCinfigTs() -> None:
@@ -81,5 +119,7 @@ def readCinfigTs() -> None:
 
 # TODO
 if __name__ == '__main__':
-    readCinfigTs()
+    # readCinfigTs()
+    obj = readTmpJson()
+    print(obj)
 

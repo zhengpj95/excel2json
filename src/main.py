@@ -305,10 +305,12 @@ class Excel2Json:
                 with open(cfglistjsonDir, 'w') as cfglistjson:
                     json.dump(newJsonAry, cfglistjson,
                               indent=2, ensure_ascii=False)
+        
+        print('write ' + self.cfgListJson + ' successful!!!')
 
     def dealConfigTs(self, clientName: str) -> None:
         """ 导出config.d.ts文件 待处理 """
-        print('start to export config.ts file')
+        # print('start to export config.ts file')
         # 传入结构体
         structDict: dict = self.getDataStruct() 
         struct = dealtsconfig.TsconfigStruct()
