@@ -63,11 +63,21 @@ def readCinfigTs() -> None:
     fileroot = os.path.normpath(os.path.join(os.path.dirname(__file__), '../output/config.ts'))
     # regularexp = re.compile(r'interface')
     with open(fileroot, 'r', encoding = 'utf-8') as readfile:
-        filestr = readfile.read().replace('\t','').replace('\n','').replace('*/', '*/\n').replace('/**','\n/**') # 每个interface单独一行
-        print(filestr)
-        # r'^interface [A-Za-z0-9]+ {[\n\s\S]+}[\n]+$'
-        obj = re.findall(r'interface [A-Za-z0-9]+ \{.*\}$', filestr, re.M|re.I|re.DOTALL) 
-        print('match list: ', obj, len(obj))
+        filestr = readfile.read()
+        # print(filestr)
+        
+        # # r'^interface [A-Za-z0-9]+ {[\n\s\S]+}[\n]+$'
+        # obj = re.findall(r'interface [A-Za-z0-9]+ {$', filestr, re.M|re.I|re.DOTALL) 
+        # obj = re.findall(r'[a-zA-z0-9]{0,}[\u4e00-\u9fa5]{0,}[a-zA-z0-9]{0,}', filestr)
+        # print('match list: ', obj, len(obj))
+
+        newfilestr = re.sub(r'/\*\*.{0,}\*/', '', filestr) # 清除所有的/***/注释  中文[\u4e00-\u9fa5]
+        newfilestr = newfilestr.replace('\n', '').replace('\t','') # 清除所有的换行符和制表符
+        newfilestr = newfilestr.replace('}interface','}\ninterface') # 每个interface一行
+        print(newfilestr)
+        # print(re.split(r'}', newfilestr), len(re.split(r'}', newfilestr))) # 以}切割
+        # obj = re.findall(r'interface [A-Za-z0-9]+ {.{1,}}', newfilestr)
+        # print(obj, len(obj))
 
 # TODO
 if __name__ == '__main__':
