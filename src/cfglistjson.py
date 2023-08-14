@@ -38,8 +38,7 @@ def dealCfglistJson(clientName: str, outputRoot: str) -> None:
                 jsonAry.append(clientName)  # 导出的json未存在，则加入
                 jsonAry.sort()  # 排序
                 newJsonAry = jsonAry
-    # 重新写入 （和上面一步整合）
-    if newJsonAry and len(newJsonAry) > 0:
-        with open(cfglistjsonDir, 'w') as cfglistjson:
-            json.dump(newJsonAry, cfglistjson, indent=2, ensure_ascii=False)
-
+        # 重新写入 （和上面一步整合）
+        if newJsonAry and len(newJsonAry) > 0:
+            with open(cfglistjsonDir, 'w') as cfglistjson:
+                json.dump(newJsonAry, cfglistjson, indent=2, ensure_ascii=False)
