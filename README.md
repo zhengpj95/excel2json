@@ -34,3 +34,8 @@ os.path.join(path1[, path2[, ...]])	把目录和文件名合成一个路径
 os.path.normcase(path) 转换path的大小写和斜杠
 
 os.path.normpath(path)	规范path字符串形式
+
+## TODO
+
+- sheet-index.txt 所有导出的json的所属xlsx关系
+- 新增有修改的才一键操作功能（导出选中，导出变化，导出所有）
