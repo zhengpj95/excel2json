@@ -71,11 +71,12 @@ class Excel2Json:
     sheet: worksheet.Worksheet = None
     # 表头结构体
     sheetStruct: SheetStruct = None
-    # 所有json文件列表
-    cfgListJson = "cfglist.json"
+	# 导出路径
+    outputRoot: str = ''
 
-    def __init__(self, xlsxUrl: str) -> None:
+    def __init__(self, xlsxUrl: str, outputRoot: str) -> None:
         self.xlslUrl = xlsxUrl
+        self.outputRoot = outputRoot
 
     def readFile(self) -> None:
         wb = load_workbook(filename=self.xlslUrl)
@@ -249,7 +250,7 @@ class Excel2Json:
             print(self.xlslUrl + ' --- 客户端配置名为空 -- 不导出json')
             return
 
-        with open(outputRoot + "/" + nameList.clientName, "w", encoding='utf-8') as outfile:
+        with open(self.outputRoot + "/" + nameList.clientName, "w", encoding='utf-8') as outfile:
             json.dump(obj, outfile, indent=2, ensure_ascii=False)
             # outfile.write(json.dumps(obj, indent=4, ensure_ascii=True))
 
@@ -270,15 +271,15 @@ class Excel2Json:
             "%Y-%m-%d %H:%M:%S", time.localtime())
         luaStr += "return"
         # json转化为lua
-        wf = open(outputRoot + "/" + nameList.serverName, 'w', 1, 'utf-8')
+        wf = open(self.outputRoot + "/" + nameList.serverName, 'w', 1, 'utf-8')
         wf.write(luaStr + json2lua.dic_to_lua_str(obj))
         wf.close()
 
     def dealCfglistJson(self, clientName: str) -> None:
         """ 处理 cfglist.json 文件 """
         # print('start to export cfglist.json file')
-        cfglistjson.dealCfglistJson(clientName, outputRoot)
-        print('write ' + self.cfgListJson + ' successful!!!')
+        cfglistjson.dealCfglistJson(clientName, self.outputRoot)
+        print('write cfglist.json successful!!!')
 
     def dealConfigTs(self, clientName: str) -> None:
         """ 导出config.d.ts文件 待处理 """
@@ -288,14 +289,11 @@ class Excel2Json:
         struct.clientName = clientName
         struct.clientNameDef = self.sheet.title
         struct.dataObj = structDict
-        struct.outputRoot = outputRoot
+        struct.outputRoot = self.outputRoot
         configts.dealConfigTs(struct)
 
 if __name__ == '__main__':
     # print(sys.argv)
-
-    xlsxUrl: str = ''
-    outputRoot: str = ''
 
     if sys.argv and len(sys.argv) > 2:
         # 拖拽单独excel表导出
@@ -309,7 +307,7 @@ if __name__ == '__main__':
             os.makedirs(outputRoot)
 
         # 开始处理excel表
-        excel2Json = Excel2Json(xlsxUrl)
+        excel2Json = Excel2Json(xlsxUrl, outputRoot)
         excel2Json.readFile()
 
     else:
@@ -328,15 +326,6 @@ if __name__ == '__main__':
         xlsxFils = Utils.readFileList(xlsxRoot)
         for file in xlsxFils:
             newUrl =os.path.normpath(os.path.join(xlsxRoot, file))
-            excelJson = Excel2Json(newUrl)
+            excelJson = Excel2Json(newUrl, outputRoot)
             excelJson.readFile()
 
-    # print(xlsxUrl, outputRoot)
-
-    # # 若导出路径不存在，创建
-    # if not os.path.exists(outputRoot):
-    #     os.makedirs(outputRoot)
-
-    # # 开始处理excel表
-    # excel2Json = Excel2Json(xlsxUrl)
-    # excel2Json.readFile()
