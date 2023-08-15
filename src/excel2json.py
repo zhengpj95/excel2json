@@ -11,6 +11,7 @@ import json2lua
 import os
 import configts
 import cfglistjson
+import sheetindex
 
 
 class SheetStruct:
@@ -160,6 +161,7 @@ class Excel2Json:
             self.dealSpecailReachRowData()
         else:
             self.dealEachRowData()
+        sheetindex.dealSheetIndexFile(self.sheetStruct.xlsxTitle, self.sheetStruct.sheetTitle, self.sheetStruct.clientName)
 
     def dealSpecailReachRowData(self) -> None:
         """ 处理特殊的导出格式，竖状 """
