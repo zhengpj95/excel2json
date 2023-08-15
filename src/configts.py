@@ -74,7 +74,7 @@ def dealConfigTs(struct: ConfigInterfaceStruct) -> None:
     tsconfigDir = os.path.normpath(os.path.join(outputRoot + '/' + configFileName)) # 导出路径
     with open(tsconfigDir, 'w', encoding='utf-8') as writefile:
         writefile.write(newtsStr)
-    print('write ' + configFileName +' successful!!!')
+    # print('write ' + configFileName +' successful!!!')
 
 
 def readTmpJson() -> dict:

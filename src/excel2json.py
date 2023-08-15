@@ -81,6 +81,7 @@ class Excel2Json:
         self.outputRoot = outputRoot
 
     def readFile(self) -> None:
+        print('正在处理表：', self.getXlsxTitle())
         wb = load_workbook(filename=self.xlslUrl)
         # print(wb.sheetnames)
         # print(wb.worksheets)
@@ -153,7 +154,7 @@ class Excel2Json:
         if (not self.sheetStruct):
             return
         # print(sheet.max_row, sheet.max_column)
-        print('start to deal sheet: ', self.sheet.title)
+        # print('start to deal sheet: ', self.sheet.title)
 
         if self.sheetStruct.spcialType:
             self.dealSpecailReachRowData()
@@ -243,19 +244,19 @@ class Excel2Json:
 
         if haveClient:
             self.dealJsonData(totalJson)
-        else:
-            print('\t\t【{0}】不需要导出json'.format(self.sheet.title))
+        # else:
+        #     print('\t\t【{0}】不需要导出json'.format(self.sheet.title))
 
         if haveServer:
             self.dealLuaData(luaJson)
-        else:
-            print("\t\t【{0}】不需要导出lua".format(self.sheet.title))
+        # else:
+        #     print("\t\t【{0}】不需要导出lua".format(self.sheet.title))
 
     def dealJsonData(self, obj: dict) -> None:
         """ 导出json数据 """
         struct = self.sheetStruct
         if not struct.clientName:
-            print(self.xlslUrl + ' --- 客户端配置名为空 -- 不导出json')
+            # print(self.xlslUrl + ' --- 客户端配置名为空 -- 不导出json')
             return
 
         with open(self.outputRoot + "/" + struct.clientName, "w", encoding='utf-8') as outfile:
@@ -269,7 +270,7 @@ class Excel2Json:
         """ 导出lua数据 """
         struct = self.sheetStruct
         if not struct.serverName:
-            print(self.xlslUrl + ' --- 服务端配置名为空 -- 不导出lua')
+            # print(self.xlslUrl + ' --- 服务端配置名为空 -- 不导出lua')
             return
 
             # lua说明
@@ -287,7 +288,7 @@ class Excel2Json:
         """ 处理 cfglist.json 文件 """
         # print('start to export cfglist.json file')
         cfglistjson.dealCfglistJson(clientName, self.outputRoot)
-        print('write cfglist.json successful!!!')
+        # print('write cfglist.json successful!!!')
 
     def dealConfigTs(self, clientName: str) -> None:
         """ 导出config.d.ts文件 待处理 """
