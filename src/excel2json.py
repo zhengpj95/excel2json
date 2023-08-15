@@ -35,6 +35,10 @@ class SheetStruct:
     # sheet名称
     def sheetTitle(self):
         pass
+    
+    # xlsx名称
+    def xlsxTitle(self):
+        pass
 
 
 class DataStruct:
@@ -69,7 +73,7 @@ class Excel2Json:
     sheet: worksheet.Worksheet = None
     # 表头结构体
     sheetStruct: SheetStruct = None
-	# 导出路径
+    # 导出路径
     outputRoot: str = ''
 
     def __init__(self, xlsxUrl: str, outputRoot: str) -> None:
@@ -92,6 +96,11 @@ class Excel2Json:
         self.xlslUrl = ''
         self.sheetStruct = None
 
+    def getXlsxTitle(self) -> str:
+        """ 获取xlsx文件名称 """
+        basename = os.path.basename(self.xlslUrl).replace('.xlsx', '')
+        return basename
+
     def getSheetStruct(self) -> SheetStruct:
         """ 获取当个sheet导出文件的名称以及key数量 """
         serverName = self.sheet.cell(row=1, column=2).value
@@ -106,6 +115,7 @@ class Excel2Json:
         struct.keyCount = keyCount
         struct.spcialType = specialType == 1
         struct.sheetTitle = self.sheet.title
+        struct.xlsxTitle = self.getXlsxTitle()
         self.sheetStruct = struct
         return struct
 
@@ -243,33 +253,33 @@ class Excel2Json:
 
     def dealJsonData(self, obj: dict) -> None:
         """ 导出json数据 """
-        nameList = self.sheetStruct
-        if not nameList.clientName:
+        struct = self.sheetStruct
+        if not struct.clientName:
             print(self.xlslUrl + ' --- 客户端配置名为空 -- 不导出json')
             return
 
-        with open(self.outputRoot + "/" + nameList.clientName, "w", encoding='utf-8') as outfile:
+        with open(self.outputRoot + "/" + struct.clientName, "w", encoding='utf-8') as outfile:
             json.dump(obj, outfile, indent=2, ensure_ascii=False)
             # outfile.write(json.dumps(obj, indent=4, ensure_ascii=True))
 
-        self.dealCfglistJson(nameList.clientName)
-        self.dealConfigTs(nameList.clientName)
+        self.dealCfglistJson(struct.clientName)
+        self.dealConfigTs(struct.clientName)
 
     def dealLuaData(self, obj: dict) -> None:
         """ 导出lua数据 """
-        nameList = self.sheetStruct
-        if not nameList.serverName:
+        struct = self.sheetStruct
+        if not struct.serverName:
             print(self.xlslUrl + ' --- 服务端配置名为空 -- 不导出lua')
             return
 
             # lua说明
         urlList = self.xlslUrl.split(os.sep)  # 获取路径中的xlsx文件名
-        luaStr = "-- {0}\n-- {1}\n".format(urlList[-1], nameList.serverName)
+        luaStr = "-- {0}\n-- {1}\n".format(urlList[-1], struct.serverName)
         luaStr += "-- %s\n\n" % time.strftime(
             "%Y-%m-%d %H:%M:%S", time.localtime())
         luaStr += "return"
         # json转化为lua
-        wf = open(self.outputRoot + "/" + nameList.serverName, 'w', 1, 'utf-8')
+        wf = open(self.outputRoot + "/" + struct.serverName, 'w', 1, 'utf-8')
         wf.write(luaStr + json2lua.dic_to_lua_str(obj))
         wf.close()
 
@@ -282,10 +292,10 @@ class Excel2Json:
     def dealConfigTs(self, clientName: str) -> None:
         """ 导出config.d.ts文件 待处理 """
         # print('start to export config.ts file')
-        structDict: dict = self.getDataStruct() # 传入结构体
+        dataDict: dict = self.getDataStruct() # 传入结构体
         struct = configts.ConfigInterfaceStruct()
         struct.clientName = clientName
         struct.clientNameDef = self.sheet.title
-        struct.dataObj = structDict
+        struct.dataObj = dataDict
         struct.outputRoot = self.outputRoot
         configts.dealConfigTs(struct)
