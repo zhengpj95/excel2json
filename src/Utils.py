@@ -12,11 +12,14 @@ class Utils:
         files = os.listdir(dir)
         rst: list = []
         for file in files:
+            firstChar = path.splitext(file)[0][0]
+            if firstChar == '~': #过滤打开中的文件
+                continue 
             textname = path.splitext(file)[-1][1:]
             if textname == extname:
                 rst.append(file)
         return rst
 
 # 测试
-# rst: list = Utils.readFileList(path.join(path.dirname(__file__) , '../xlsx'))
-# print(rst)
+rst: list = Utils.readFileList(path.join(path.dirname(__file__) , '../xlsx'))
+print(rst)
