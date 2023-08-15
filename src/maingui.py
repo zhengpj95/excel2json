@@ -1,11 +1,11 @@
 """ 
-可视化操作界面，TODO 未完成
+可视化操作界面
 """
 
 import tkinter
 from Utils import Utils
 from os import path
-import main
+from excel2json import Excel2Json
 
 # 创建主窗口
 win = tkinter.Tk()
@@ -33,7 +33,7 @@ def exportAllFunc():
     print('print all')
     for file in files:
         filePath = path.normpath(path.join(xlsxRoot, file))
-        excel2Json = main.Excel2Json(filePath, outputRoot)
+        excel2Json = Excel2Json(filePath, outputRoot)
         excel2Json.readFile()
 
 onekeyBtn = tkinter.Button(win, text='导出所有', width=20, font=(None,15), command=exportAllFunc)
@@ -48,7 +48,7 @@ def exportSelectFunc():
     txt = listbox.get(selectItem) #选中的内容
     selectItemPath = path.normpath(path.join(xlsxRoot, txt))
     print('print selected: ', selectItemPath)
-    excel2Json = main.Excel2Json(selectItemPath, outputRoot)
+    excel2Json = Excel2Json(selectItemPath, outputRoot)
     excel2Json.readFile()
 
 singleBtn = tkinter.Button(win, text='导出选中', width=20, font=(None,15), command=exportSelectFunc)
