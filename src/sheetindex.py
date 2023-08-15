@@ -25,21 +25,27 @@ def dealSheetIndexFile(xlsxTitle: str, sheetTitle: str, jsonName: str) -> None:
 
     # print(111, obj)
     rewriteStr = ''
-    for key in obj.keys():
+    for key in sorted(obj.keys()):  # xlsx名字遍历
         singleXlsxStr = key + ' = '
-        for sheetkey in obj.get(key).keys():
-            singleXlsxStr += obj.get(key).get(sheetkey) + ' | '
+        subObj: dict = obj.get(key) # sheet字典
+        subObjKeys = subObj.keys()  # sheet名字数组
+        for i,sheetkey in enumerate(sorted(subObjKeys)): # sheet名字遍历，i就是序号，从0开始
+            # print(i, sheetkey)
+            if len(subObjKeys) - 1 == i: 
+                singleXlsxStr += subObj.get(sheetkey)
+            else :
+                singleXlsxStr += subObj.get(sheetkey) + ' | '
         if rewriteStr == '':
             rewriteStr = singleXlsxStr
         else:
             rewriteStr = rewriteStr + '\n' + singleXlsxStr
-    print(rewriteStr)
+    # print(rewriteStr)
     with open(filePath, 'w', encoding='utf-8') as writefile:
         writefile.write(rewriteStr)
 
 
 def readSheetIndexFile() -> dict:
-    """ 读取 00sheet_index.txt，缓存为dict """
+    """ xlsx字典 读取 00sheet_index.txt，缓存为dict """
     lineList: list = []
     with open(filePath, 'r', encoding='utf-8') as readfile:
         lineList = readfile.readlines()

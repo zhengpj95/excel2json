@@ -35,7 +35,10 @@ os.path.normcase(path) 转换path的大小写和斜杠
 
 os.path.normpath(path)	规范path字符串形式
 
+sorted(dict.keys())  字典key排序
+
+enumerate(dict.keys()) 字典key的序号遍历方式  for i,v in enumerate() i就是序号从0开始，v就是key值
+
 ## TODO
 
-- sheet-index.txt 所有导出的json的所属xlsx关系
 - 新增有修改的才一键操作功能（导出选中，导出变化，导出所有）
