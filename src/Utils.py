@@ -2,6 +2,11 @@
 import os
 from os import path
 
+# 常量定义，xlsx文件夹路径
+XLSX_ROOT = path.normpath(path.join(path.dirname(__file__), '../xlsx'))
+# 常量定义，output文件夹路径
+OUTPUT_ROOT = path.normpath(path.join(path.dirname(__file__), "../output"))
+
 class Utils:
 
     def readFileList(dir: str, extname: str = 'xlsx') -> list:

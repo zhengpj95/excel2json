@@ -6,6 +6,7 @@ import tkinter
 from Utils import Utils
 from os import path
 from excel2json import Excel2Json
+from Utils import XLSX_ROOT, OUTPUT_ROOT
 
 # 创建主窗口
 win = tkinter.Tk()
@@ -16,10 +17,10 @@ win.minsize(800, 500)
 win.maxsize(1100, 600)
 
 # 所有的xlsx文件
-xlsxRoot = path.normpath(path.join(path.dirname(__file__), '../xlsx'))
+xlsxRoot = XLSX_ROOT
 files = Utils.readFileList(xlsxRoot)
 # 导出路径
-outputRoot = path.normpath(path.join(xlsxRoot, '../output'))
+outputRoot = OUTPUT_ROOT
 
 # 创建列表
 listbox = tkinter.Listbox(win, font=("微软雅黑", 12), height=20)

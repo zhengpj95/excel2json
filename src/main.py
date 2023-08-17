@@ -6,6 +6,7 @@ import sys
 import os
 from Utils import Utils
 from excel2json import Excel2Json
+from Utils import OUTPUT_ROOT
 
 
 if __name__ == '__main__':
@@ -30,7 +31,7 @@ if __name__ == '__main__':
         # 运行所有的excel
         currentpath = os.path.abspath(__file__)
         dirname = os.path.dirname(currentpath)
-        outputRoot = os.path.normpath(os.path.join(dirname, "../output"))
+        outputRoot = OUTPUT_ROOT
 
         # 若导出路径不存在，创建
         if not os.path.exists(outputRoot):

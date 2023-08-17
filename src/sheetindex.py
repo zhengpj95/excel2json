@@ -3,11 +3,12 @@ json到excel的关联
 """
 
 from os import path
+from Utils import XLSX_ROOT
 
 # 文件名
 fileName = "00sheet_index.txt"
 # 文件路径
-filePath = path.normpath(path.join(path.dirname(__file__), '../xlsx', fileName))
+filePath = path.normpath(path.join(XLSX_ROOT, fileName))
 
 def dealSheetIndexFile(xlsxTitle: str, sheetTitle: str, jsonName: str) -> None:
     """ 写入 00sheet_index.txt，建立xlsx和其下sheet的映射关系 """

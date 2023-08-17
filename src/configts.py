@@ -5,6 +5,7 @@
 import os
 import re
 import json
+from Utils import OUTPUT_ROOT
 
 # 导出文件名
 configFileName = 'config.ts'
@@ -98,7 +99,7 @@ def writeTmpJson(obj: dict) -> None:
 # TODO  测试，读取 config.ts 文件
 def readCinfigTs() -> None:
     print('start to read config.ts file')
-    fileroot = os.path.normpath(os.path.join(os.path.dirname(__file__), '../output/config.ts'))
+    fileroot = os.path.normpath(os.path.join(OUTPUT_ROOT, './config.ts'))
     # regularexp = re.compile(r'interface')
     with open(fileroot, 'r', encoding = 'utf-8') as readfile:
         filestr = readfile.read()
