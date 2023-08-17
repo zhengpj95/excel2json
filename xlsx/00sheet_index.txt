@@ -1,2 +1,3 @@
 A-按钮 = 按钮配置[IconConfig.json]
 Y-引导表 = guide[GuideConfig.json] | guide_step[GuideStepConfig.json]
+test = 语言包[LangConfig.json]

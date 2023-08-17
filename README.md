@@ -42,3 +42,4 @@ enumerate(dict.keys()) 字典key的序号遍历方式  for i,v in enumerate() i�
 ## TODO
 
 - 新增有修改的才一键操作功能（导出选中，导出变化，导出所有）
+- 如果删除了excel内容，对应的一些导出内容没有清除

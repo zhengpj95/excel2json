@@ -6,6 +6,10 @@ from os import path
 XLSX_ROOT = path.normpath(path.join(path.dirname(__file__), '../xlsx'))
 # 常量定义，output文件夹路径
 OUTPUT_ROOT = path.normpath(path.join(path.dirname(__file__), "../output"))
+# 常量定义，output/client，客户端导出json路径
+CLIENT_ROOT = path.normpath(path.join(OUTPUT_ROOT, './client'))
+# 常量定义，output/server，服务端导出lua路径
+SERVER_ROOT = path.normpath(path.join(OUTPUT_ROOT, './server'))
 
 class Utils:
 
