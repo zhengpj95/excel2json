@@ -27,10 +27,9 @@ if __name__ == '__main__':
         excel2Json.readFile()
 
     else:
-        # 运行所有的excel TODO 测试
+        # 运行所有的excel
         currentpath = os.path.abspath(__file__)
         dirname = os.path.dirname(currentpath)
-        # xlsxUrl = os.path.normpath(os.path.join(dirname, "../test.xlsx"))
         outputRoot = os.path.normpath(os.path.join(dirname, "../output"))
 
         # 若导出路径不存在，创建

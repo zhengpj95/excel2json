@@ -19,7 +19,3 @@ class Utils:
             if textname == extname:
                 rst.append(file)
         return rst
-
-# # 测试
-# rst: list = Utils.readFileList(path.join(path.dirname(__file__) , '../xlsx'))
-# print(rst)
