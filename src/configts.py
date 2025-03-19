@@ -10,9 +10,9 @@ from Utils import OUTPUT_ROOT
 # 导出文件名
 configFileName = 'config.ts'
 # 隐射文件名
-tmpFileName = "configtmp.json"
+tmpFileName = "00config_ts_tmp.txt"
 # 缓存文件目录
-tmpFileRoot = os.path.normpath(os.path.join(os.path.dirname(__file__), '../tmp/'))
+tmpFileRoot = os.path.normpath(os.path.join(os.path.dirname(__file__), '../xlsx/'))
 # 隐射文件路径
 tmpFilePath = os.path.normpath(os.path.join(tmpFileRoot, tmpFileName))
 
