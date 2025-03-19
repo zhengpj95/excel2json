@@ -82,7 +82,8 @@ class Excel2Json:
         self.outputRoot = outputRoot
 
     def readFile(self) -> None:
-        print('正在处理表：', self.getXlsxTitle())
+        xlsxTitle = self.getXlsxTitle()
+        print('===== 开始处理表：', xlsxTitle, " =====")
         wb = load_workbook(filename=self.xlslUrl)
         # print(wb.sheetnames)
         # print(wb.worksheets)
@@ -97,6 +98,7 @@ class Excel2Json:
         self.sheet = None
         self.xlslUrl = ''
         self.sheetStruct = None
+        print('===== 结束处理', xlsxTitle, " =====\n")
 
     def getXlsxTitle(self) -> str:
         """ 获取xlsx文件名称 """
