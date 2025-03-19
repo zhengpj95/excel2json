@@ -2,16 +2,18 @@
 把 excel 导出 json | lua
 """
 
+import json
+import os
+import time
+
 from openpyxl import load_workbook
 from openpyxl.worksheet import worksheet
-import json
-import str2list
-import time
-import json2lua
-import os
-import configts
+
 import cfglistjson
+import configts
+import json2lua
 import sheetindex
+import str2list
 
 
 class SheetStruct:
@@ -32,11 +34,11 @@ class SheetStruct:
     # 特殊的格式
     def spcialType(self):
         pass
-    
+
     # sheet名称
     def sheetTitle(self):
         pass
-    
+
     # xlsx名称
     def xlsxTitle(self):
         pass
@@ -63,7 +65,6 @@ class DataStruct:
 
 
 class Excel2Json:
-
     xlslUrl = ''
     # 配表信息定义的行数
     structRow = [4, 5, 6, 7]
@@ -127,7 +128,7 @@ class Excel2Json:
         """ 获取某行的数据 """
         columns = self.sheet.max_column
         rowData = []
-        for i in range(1, columns+1):
+        for i in range(1, columns + 1):
             cellValue = self.sheet.cell(row=row, column=i).value
             # 单元格填0是需要导出的
             if cellValue is None:
@@ -163,7 +164,8 @@ class Excel2Json:
             self.dealSpecailReachRowData()
         else:
             self.dealEachRowData()
-        sheetindex.dealSheetIndexFile(self.sheetStruct.xlsxTitle, self.sheetStruct.sheetTitle, self.sheetStruct.clientName)
+        sheetindex.deal_sheet_index_file(self.sheetStruct.xlsxTitle, self.sheetStruct.sheetTitle,
+                                         self.sheetStruct.clientName)
 
     def dealSpecailReachRowData(self) -> None:
         """ 处理特殊的导出格式，竖状 """
@@ -213,7 +215,7 @@ class Excel2Json:
 
         totalJson = {}
         luaJson = {}  # 先生成临时json，再转化为lua
-        for row in range(self.startRow, maxRow+1):
+        for row in range(self.startRow, maxRow + 1):
             rowData = self.getRowValue(row)
             if len(rowData) == 0 or rowData[0] is None:
                 break
@@ -297,7 +299,7 @@ class Excel2Json:
     def dealConfigTs(self, clientName: str) -> None:
         """ 导出config.d.ts文件 待处理 """
         # print('start to export config.ts file')
-        dataDict: dict = self.getDataStruct() # 传入结构体
+        dataDict: dict = self.getDataStruct()  # 传入结构体
         struct = configts.ConfigInterfaceStruct()
         struct.clientName = clientName
         struct.clientNameDef = self.sheet.title
