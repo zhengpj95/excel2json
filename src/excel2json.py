@@ -19,73 +19,47 @@ import str2list
 class SheetStruct:
     """ 表的导出信息 """
 
-    # 服务端导出文件名称
-    def serverName(self):
-        pass
-
-    # 客户端导出文件名称
-    def clientName(self):
-        pass
-
-    # key的数量
-    def keyCount(self):
-        pass
-
-    # 特殊的格式
-    def specialType(self):
-        pass
-
-    # sheet名称
-    def sheetTitle(self):
-        pass
-
-    # xlsx名称
-    def xlsxTitle(self):
-        pass
+    def __init__(self):
+        self.server_name = None  # 服务端导出文件名称
+        self.client_name = None  # 客户端导出文件名称
+        self.key_count = None  # key的数量
+        self.special_type = None  # 特殊的格式
+        self.sheet_title = None  # sheet名称
+        self.xlsx_title = None  # xlsx名称
 
 
 class DataStruct:
     """ 导出数据的结构体信息 """
 
-    # 字段名
-    def name(self):
-        pass
-
-    # 类型 (number, string, array, object)
-    def type(self):
-        pass
-
-    # 导出字段（S服务端C客户端）
-    def cs(self):
-        pass
-
-    # 字段名注释
-    def definition(self):
-        pass
+    def __init__(self):
+        self.name = None  # 字段名
+        self.type = None  # 类型 (number, string, array, object)
+        self.cs = None  # 导出字段（S服务端C客户端）
+        self.definition = None  # 字段名注释
 
 
 class Excel2Json:
-    xlslUrl = ''
+    xlsl_url = ''
     # 配表信息定义的行数
-    structRow = [4, 5, 6, 7]
+    struct_row = [4, 5, 6, 7]
     # 配表真实数据要导出的列数，每行的后面可能有些说明，但是是不用导出，所以需要记录要导出的真实列数，也就是structRow行的真实列数
-    structColLen = 0
+    struct_col_len = 0
     # 配表真实数据开始的行数
-    startRow = 8
+    start_row = 8
     sheet: worksheet.Worksheet = None
     # 表头结构体
-    sheetStruct: SheetStruct = None
+    sheet_struct: SheetStruct = None
     # 导出路径
-    outputRoot: str = ''
+    output_root: str = ''
 
     def __init__(self, xlsx_url: str, output_root: str) -> None:
-        self.xlslUrl = xlsx_url
-        self.outputRoot = output_root
+        self.xlsl_url = xlsx_url
+        self.output_root = output_root  # 导出路径
 
     def read_file(self) -> None:
         xlsxTitle = self.get_xlsx_title()
         print('===== 开始处理表：', xlsxTitle, " =====")
-        wb = load_workbook(filename=self.xlslUrl)
+        wb = load_workbook(filename=self.xlsl_url)
         # print(wb.sheetnames)
         # print(wb.worksheets)
         for sheet in wb.worksheets:
@@ -97,13 +71,13 @@ class Excel2Json:
                 continue
             self.deal_single_sheet()
         self.sheet = None
-        self.xlslUrl = ''
-        self.sheetStruct = None
+        self.xlsl_url = ''
+        self.sheet_struct = None
         print('===== 结束处理', xlsxTitle, " =====\n")
 
     def get_xlsx_title(self) -> str:
         """ 获取xlsx文件名称 """
-        basename = os.path.basename(self.xlslUrl).replace('.xlsx', '')
+        basename = os.path.basename(self.xlsl_url).replace('.xlsx', '')
         return basename
 
     def get_sheet_struct(self) -> SheetStruct:
@@ -115,13 +89,13 @@ class Excel2Json:
         if not (serverName or clientName):
             return None
         struct = SheetStruct()
-        struct.serverName = serverName
-        struct.clientName = clientName
-        struct.keyCount = keyCount
-        struct.specialType = specialType == 1
-        struct.sheetTitle = self.sheet.title
-        struct.xlsxTitle = self.get_xlsx_title()
-        self.sheetStruct = struct
+        struct.server_name = serverName
+        struct.client_name = clientName
+        struct.key_count = keyCount
+        struct.special_type = specialType == 1
+        struct.sheet_title = self.sheet.title
+        struct.xlsx_title = self.get_xlsx_title()
+        self.sheet_struct = struct
         return struct
 
     def get_row_value(self, row: int) -> list:
@@ -138,12 +112,12 @@ class Excel2Json:
 
     def get_data_struct(self) -> dict:
         """ 导出数据的结构体信息 """
-        row4 = self.get_row_value(self.structRow[0])
-        row5 = self.get_row_value(self.structRow[1])
-        row6 = self.get_row_value(self.structRow[2])
-        row7 = self.get_row_value(self.structRow[3])
+        row4 = self.get_row_value(self.struct_row[0])
+        row5 = self.get_row_value(self.struct_row[1])
+        row6 = self.get_row_value(self.struct_row[2])
+        row7 = self.get_row_value(self.struct_row[3])
         dataDict: dict = {}
-        self.structColLen = len(row5)
+        self.struct_col_len = len(row5)
         for i in range(0, len(row5)):
             struct = DataStruct()
             struct.name = row5[i]
@@ -155,17 +129,17 @@ class Excel2Json:
 
     def deal_single_sheet(self) -> None:
         """ 处理单张sheet """
-        if not self.sheetStruct:
+        if not self.sheet_struct:
             return
         # print(sheet.max_row, sheet.max_column)
         # print('start to deal sheet: ', self.sheet.title)
 
-        if self.sheetStruct.specialType:
+        if self.sheet_struct.special_type:
             self.deal_special_reach_row_data()
         else:
             self.deal_each_row_data()
-        sheetindex.deal_sheet_index_file(self.sheetStruct.xlsxTitle, self.sheetStruct.sheetTitle,
-                                         self.sheetStruct.clientName)
+        sheetindex.deal_sheet_index_file(self.sheet_struct.xlsx_title, self.sheet_struct.sheet_title,
+                                         self.sheet_struct.client_name)
 
     def deal_special_reach_row_data(self) -> None:
         """ 处理特殊的导出格式，竖状 """
@@ -174,7 +148,7 @@ class Excel2Json:
             return
 
         totalJson = {}
-        for row in range(self.startRow, self.sheet.max_row + 1):
+        for row in range(self.start_row, self.sheet.max_row + 1):
             rowData: DataStruct = self.get_row_value(row)
             if len(rowData) == 0 or rowData[0] is None or 'C' not in rowData[2]:
                 break
@@ -210,12 +184,12 @@ class Excel2Json:
             if 'S' in dataStruct[idx].cs and haveServer is False:
                 haveServer = True
 
-        totalKey = self.sheetStruct.keyCount  # 表中配置的key数量
+        totalKey = self.sheet_struct.key_count  # 表中配置的key数量
         maxRow = self.sheet.max_row
 
         totalJson = {}
         luaJson = {}  # 先生成临时json，再转化为lua
-        for row in range(self.startRow, maxRow + 1):
+        for row in range(self.start_row, maxRow + 1):
             rowData = self.get_row_value(row)
             if len(rowData) == 0 or rowData[0] is None:
                 break
@@ -229,7 +203,7 @@ class Excel2Json:
                 eachRowJson = eachRowJson.get(rowData[key])
                 eachLuaJson = eachLuaJson.get(rowData[key])
 
-            for col in range(0, self.structColLen):
+            for col in range(0, self.struct_col_len):
                 colStruct: DataStruct = dataStruct[col]
                 if 'C' in colStruct.cs:
                     if colStruct.type == 'array':
@@ -260,49 +234,45 @@ class Excel2Json:
 
     def deal_json_data(self, obj: dict) -> None:
         """ 导出json数据 """
-        struct = self.sheetStruct
-        if not struct.clientName:
+        struct = self.sheet_struct
+        if not struct.client_name:
             # print(self.xlslUrl + ' --- 客户端配置名为空 -- 不导出json')
             return
 
-        with open(self.outputRoot + "/" + struct.clientName, "w", encoding='utf-8') as outfile:
+        with open(self.output_root + "/" + struct.client_name, "w", encoding='utf-8') as outfile:
             json.dump(obj, outfile, indent=2, ensure_ascii=False)
             # outfile.write(json.dumps(obj, indent=4, ensure_ascii=True))
 
-        self.deal_cfglist_json(struct.clientName)
-        self.deal_config_ts(struct.clientName)
+        self.deal_cfglist_json(struct.client_name)
+        self.deal_config_ts(struct.client_name)
 
     def deal_lua_data(self, obj: dict) -> None:
         """ 导出lua数据 """
-        struct = self.sheetStruct
-        if not struct.serverName:
+        struct = self.sheet_struct
+        if not struct.server_name:
             # print(self.xlslUrl + ' --- 服务端配置名为空 -- 不导出lua')
             return
 
             # lua说明
-        urlList = self.xlslUrl.split(os.sep)  # 获取路径中的xlsx文件名
-        luaStr = "-- {0}\n-- {1}\n".format(urlList[-1], struct.serverName)
+        urlList = self.xlsl_url.split(os.sep)  # 获取路径中的xlsx文件名
+        luaStr = "-- {0}\n-- {1}\n".format(urlList[-1], struct.server_name)
         luaStr += "-- %s\n\n" % time.strftime(
             "%Y-%m-%d %H:%M:%S", time.localtime())
         luaStr += "return"
         # json转化为lua
-        wf = open(self.outputRoot + "/" + struct.serverName, 'w', 1, 'utf-8')
+        wf = open(self.output_root + "/" + struct.server_name, 'w', 1, 'utf-8')
         wf.write(luaStr + json2lua.dic_to_lua_str(obj))
         wf.close()
 
     def deal_cfglist_json(self, client_name: str) -> None:
         """ 处理 cfglist.json 文件 """
         # print('start to export cfglist.json file')
-        cfglistjson.deal_cfglist_json(client_name, self.outputRoot)
+        cfglistjson.deal_cfglist_json(client_name, self.output_root)
         # print('write cfglist.json successful!!!')
 
     def deal_config_ts(self, client_name: str) -> None:
         """ 导出config.d.ts文件 待处理 """
         # print('start to export config.ts file')
         dataDict: dict = self.get_data_struct()  # 传入结构体
-        struct = configts.ConfigInterfaceStruct()
-        struct.clientName = client_name
-        struct.clientNameDef = self.sheet.title
-        struct.dataObj = dataDict
-        struct.outputRoot = self.outputRoot
+        struct = configts.ConfigInterfaceStruct(client_name, self.sheet.title, dataDict, self.output_root)
         configts.deal_config_ts(struct)

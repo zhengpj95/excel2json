@@ -1,7 +1,6 @@
 """ 
 导出 config.ts 接口文件
 """
-
 import json
 import os
 import re
@@ -23,21 +22,11 @@ tmpFilePath = os.path.normpath(os.path.join(tmpFileRoot, tmpFileName))
 class ConfigInterfaceStruct:
     """ 导出config.ts文件的信息 """
 
-    # 表名
-    def clientName(self):
-        pass
-
-    # 表名描述
-    def clientNameDef(self):
-        pass
-
-    # 字段结构体
-    def dataObj(self):
-        pass
-
-    # 导出路径
-    def outputRoot(self):
-        pass
+    def __init__(self, client_name: str, client_name_def: str, data_obj: dict, output_root: str):
+        self.client_name = client_name  # 表名
+        self.client_name_def = client_name_def  # 表名描述
+        self.data_obj = data_obj  # 字段结构体
+        self.output_root = output_root  # 导出路径
 
 
 def deal_config_ts(struct: ConfigInterfaceStruct) -> None:
@@ -45,10 +34,10 @@ def deal_config_ts(struct: ConfigInterfaceStruct) -> None:
     if not struct:
         return
 
-    clientName: str = struct.clientName
-    dataObj: dict = struct.dataObj
-    outputRoot: str = struct.outputRoot
-    clientNameDef: str = struct.clientNameDef
+    clientName: str = struct.client_name
+    dataObj: dict = struct.data_obj
+    outputRoot: str = struct.output_root
+    clientNameDef: str = struct.client_name_def
     print("  ", clientName, outputRoot, clientNameDef)
 
     # 写入config.ts的内容
@@ -56,15 +45,15 @@ def deal_config_ts(struct: ConfigInterfaceStruct) -> None:
     tsStr = tsStr + 'export interface ' + clientName.replace('.json', '') + ' {'
     for idx in range(0, len(dataObj)):
         data: dict = dataObj[idx]
-        if 'C' in data._cs or 'c' in data._cs:
-            valType = data._type
-            if data._type == 'array':
+        if 'C' in data.cs or 'c' in data.cs:
+            valType = data.type
+            if data.type == 'array':
                 valType = 'any[]'
-            elif data._type == 'object':
+            elif data.type == 'object':
                 valType = 'any'
-            tsStr = tsStr + '\n  /** ' + data._def + ' */'
-            tsStr = tsStr + '\n  readonly ' + data._name + ': ' + valType + ';'
-            # print(data._cs, data._type, data._name, data._def)
+            tsStr = tsStr + '\n  /** ' + data.definition + ' */'
+            tsStr = tsStr + '\n  readonly ' + data.name + ': ' + valType + ';'
+            # print(data.cs, data.type, data.name, data.definition)
     tsStr = tsStr + '\n}'
 
     tmpObj = read_tmp_json()
@@ -102,10 +91,10 @@ def read_tmp_json() -> dict:
         return jsonobj
 
 
-def write_tmp_json(obj: dict) -> None:
+def write_tmp_json(obj_dict: dict) -> None:
     """ 写入缓存文件 """
     with open(tmpFilePath, 'w', encoding='utf-8') as writefile:
-        json.dump(obj, writefile, indent=2, ensure_ascii=False)
+        json.dump(obj_dict, writefile, indent=2, ensure_ascii=False)
 
 
 # TODO  测试，读取 config.ts 文件
