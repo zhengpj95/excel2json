@@ -40,7 +40,7 @@ class ConfigInterfaceStruct:
         pass
 
 
-def dealConfigTs(struct: ConfigInterfaceStruct) -> None:
+def deal_config_ts(struct: ConfigInterfaceStruct) -> None:
     """ 导出 config.ts 文件 """
     if not struct:
         return
@@ -67,10 +67,10 @@ def dealConfigTs(struct: ConfigInterfaceStruct) -> None:
             # print(data._cs, data._type, data._name, data._def)
     tsStr = tsStr + '\n}'
 
-    tmpObj = readTmpJson()
+    tmpObj = read_tmp_json()
     tmpObj[clientName] = tsStr  # 写入缓存json文件
 
-    writeTmpJson(tmpObj)
+    write_tmp_json(tmpObj)
 
     newtsStr: str = '/** 本文件为导表工具导出，不可手动修改 */\n'  # config.ts
     configNameTsStr: str = '/** 本文件为导表工具导出，不可手动修改 */\n\nexport const enum ConfigName {\n'  # config-name.ts
@@ -90,7 +90,7 @@ def dealConfigTs(struct: ConfigInterfaceStruct) -> None:
         writefile.write(configNameTsStr)
 
 
-def readTmpJson() -> dict:
+def read_tmp_json() -> dict:
     """ 读取一份本地缓存文件，所有的导出到config.ts的json文件，都映射一个key-vale，方便下回写入 """
     if not os.path.exists(tmpFileRoot):
         os.mkdir(tmpFileRoot)
@@ -102,27 +102,27 @@ def readTmpJson() -> dict:
         return jsonobj
 
 
-def writeTmpJson(obj: dict) -> None:
+def write_tmp_json(obj: dict) -> None:
     """ 写入缓存文件 """
     with open(tmpFilePath, 'w', encoding='utf-8') as writefile:
         json.dump(obj, writefile, indent=2, ensure_ascii=False)
 
 
 # TODO  测试，读取 config.ts 文件
-def readCinfigTs() -> None:
+def read_config_ts() -> None:
     print('start to read config.ts file')
-    fileroot = os.path.normpath(os.path.join(OUTPUT_ROOT, './config.ts'))
+    file_root = os.path.normpath(os.path.join(OUTPUT_ROOT, './config.ts'))
     # regularexp = re.compile(r'interface')
-    with open(fileroot, 'r', encoding='utf-8') as readfile:
-        filestr = readfile.read()
+    with open(file_root, 'r', encoding='utf-8') as readfile:
+        file_str = readfile.read()
         # print(filestr)
 
         # # r'^interface [A-Za-z0-9]+ {[\n\s\S]+}[\n]+$'
-        # obj = re.findall(r'interface [A-Za-z0-9]+ {$', filestr, re.M|re.I|re.DOTALL) 
+        # obj = re.findall(r'interface [A-Za-z0-9]+ {$', filestr, re.M|re.I|re.DOTALL)
         # obj = re.findall(r'[a-zA-z0-9]{0,}[\u4e00-\u9fa5]{0,}[a-zA-z0-9]{0,}', filestr)
         # print('match list: ', obj, len(obj))
 
-        newfilestr = re.sub(r'/\*\*.{0,}\*/', '', filestr)  # 清除所有的/***/注释  中文[\u4e00-\u9fa5]
+        newfilestr = re.sub(r'/\*\*.{0,}\*/', '', file_str)  # 清除所有的/***/注释  中文[\u4e00-\u9fa5]
         newfilestr = newfilestr.replace('\n', '').replace('\t', '')  # 清除所有的换行符和制表符
         newfilestr = newfilestr.replace('}interface', '}\ninterface')  # 每个interface一行
         print(newfilestr)
@@ -134,5 +134,5 @@ def readCinfigTs() -> None:
 # TODO
 if __name__ == '__main__':
     # readCinfigTs()
-    obj = readTmpJson()
+    obj = read_tmp_json()
     print(obj)

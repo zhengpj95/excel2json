@@ -78,12 +78,12 @@ class Excel2Json:
     # 导出路径
     outputRoot: str = ''
 
-    def __init__(self, xlsxUrl: str, outputRoot: str) -> None:
-        self.xlslUrl = xlsxUrl
-        self.outputRoot = outputRoot
+    def __init__(self, xlsx_url: str, output_root: str) -> None:
+        self.xlslUrl = xlsx_url
+        self.outputRoot = output_root
 
-    def readFile(self) -> None:
-        xlsxTitle = self.getXlsxTitle()
+    def read_file(self) -> None:
+        xlsxTitle = self.get_xlsx_title()
         print('===== 开始处理表：', xlsxTitle, " =====")
         wb = load_workbook(filename=self.xlslUrl)
         # print(wb.sheetnames)
@@ -93,26 +93,26 @@ class Excel2Json:
             if sheet.title[0] == '#':
                 continue
             self.sheet = sheet
-            if (not self.getSheetStruct()):
+            if not self.get_sheet_struct():
                 continue
-            self.dealSingleSheet()
+            self.deal_single_sheet()
         self.sheet = None
         self.xlslUrl = ''
         self.sheetStruct = None
         print('===== 结束处理', xlsxTitle, " =====\n")
 
-    def getXlsxTitle(self) -> str:
+    def get_xlsx_title(self) -> str:
         """ 获取xlsx文件名称 """
         basename = os.path.basename(self.xlslUrl).replace('.xlsx', '')
         return basename
 
-    def getSheetStruct(self) -> SheetStruct:
+    def get_sheet_struct(self) -> SheetStruct:
         """ 获取当个sheet导出文件的名称以及key数量 """
         serverName = self.sheet.cell(row=1, column=2).value
         clientName = self.sheet.cell(row=1, column=5).value
         keyCount = self.sheet.cell(row=2, column=2).value
         specialType = self.sheet.cell(row=2, column=5).value
-        if (not (serverName or clientName)):
+        if not (serverName or clientName):
             return None
         struct = SheetStruct()
         struct.serverName = serverName
@@ -120,11 +120,11 @@ class Excel2Json:
         struct.keyCount = keyCount
         struct.spcialType = specialType == 1
         struct.sheetTitle = self.sheet.title
-        struct.xlsxTitle = self.getXlsxTitle()
+        struct.xlsxTitle = self.get_xlsx_title()
         self.sheetStruct = struct
         return struct
 
-    def getRowValue(self, row: int) -> list:
+    def get_row_value(self, row: int) -> list:
         """ 获取某行的数据 """
         columns = self.sheet.max_column
         rowData = []
@@ -136,12 +136,12 @@ class Excel2Json:
             rowData.append(cellValue)
         return rowData
 
-    def getDataStruct(self) -> dict:
+    def get_data_struct(self) -> dict:
         """ 导出数据的结构体信息 """
-        row4 = self.getRowValue(self.structRow[0])
-        row5 = self.getRowValue(self.structRow[1])
-        row6 = self.getRowValue(self.structRow[2])
-        row7 = self.getRowValue(self.structRow[3])
+        row4 = self.get_row_value(self.structRow[0])
+        row5 = self.get_row_value(self.structRow[1])
+        row6 = self.get_row_value(self.structRow[2])
+        row7 = self.get_row_value(self.structRow[3])
         dataDict: dict = {}
         self.structColLen = len(row5)
         for i in range(0, len(row5)):
@@ -153,29 +153,29 @@ class Excel2Json:
             dataDict[i] = struct
         return dataDict
 
-    def dealSingleSheet(self) -> None:
+    def deal_single_sheet(self) -> None:
         """ 处理单张sheet """
-        if (not self.sheetStruct):
+        if not self.sheetStruct:
             return
         # print(sheet.max_row, sheet.max_column)
         # print('start to deal sheet: ', self.sheet.title)
 
         if self.sheetStruct.spcialType:
-            self.dealSpecailReachRowData()
+            self.deal_special_reach_row_data()
         else:
-            self.dealEachRowData()
+            self.deal_each_row_data()
         sheetindex.deal_sheet_index_file(self.sheetStruct.xlsxTitle, self.sheetStruct.sheetTitle,
                                          self.sheetStruct.clientName)
 
-    def dealSpecailReachRowData(self) -> None:
+    def deal_special_reach_row_data(self) -> None:
         """ 处理特殊的导出格式，竖状 """
-        dataStruct = self.getDataStruct()
+        dataStruct = self.get_data_struct()
         if not dataStruct:
             return
 
         totalJson = {}
         for row in range(self.startRow, self.sheet.max_row + 1):
-            rowData: DataStruct = self.getRowValue(row)
+            rowData: DataStruct = self.get_row_value(row)
             if len(rowData) == 0 or rowData[0] is None or 'C' not in rowData[2]:
                 break
 
@@ -185,17 +185,17 @@ class Excel2Json:
             col3: DataStruct = dataStruct[3]  # value
 
             if rowData[1] == 'array':
-                eachRowJson[col3._name] = str2list.strToList(rowData[3])
+                eachRowJson[col3._name] = str2list.str_to_list(rowData[3])
             elif rowData[1] == 'object':
                 eachRowJson[col3._name] = json.loads(rowData[3])
             else:
                 eachRowJson[col3._name] = rowData[3]
 
-        self.dealJsonData(totalJson)
+        self.deal_json_data(totalJson)
 
-    def dealEachRowData(self) -> None:
+    def deal_each_row_data(self) -> None:
         """ 读取每行配置，处理导出数据 """
-        dataStruct = self.getDataStruct()
+        dataStruct = self.get_data_struct()
         if not dataStruct:
             return
 
@@ -216,7 +216,7 @@ class Excel2Json:
         totalJson = {}
         luaJson = {}  # 先生成临时json，再转化为lua
         for row in range(self.startRow, maxRow + 1):
-            rowData = self.getRowValue(row)
+            rowData = self.get_row_value(row)
             if len(rowData) == 0 or rowData[0] is None:
                 break
 
@@ -233,7 +233,7 @@ class Excel2Json:
                 colStruct: DataStruct = dataStruct[col]
                 if 'C' in colStruct._cs:
                     if colStruct._type == 'array':
-                        eachRowJson[colStruct._name] = str2list.strToList(
+                        eachRowJson[colStruct._name] = str2list.str_to_list(
                             rowData[col])
                     elif colStruct._type == 'object':
                         eachRowJson[colStruct._name] = json.loads(rowData[col])
@@ -241,7 +241,7 @@ class Excel2Json:
                         eachRowJson[colStruct._name] = rowData[col]
                 if 'S' in colStruct._cs:
                     if colStruct._type == 'array':
-                        eachLuaJson[colStruct._name] = str2list.strToList(
+                        eachLuaJson[colStruct._name] = str2list.str_to_list(
                             rowData[col])
                     elif colStruct._type == 'object':
                         eachLuaJson[colStruct._name] = json.loads(rowData[col])
@@ -249,16 +249,16 @@ class Excel2Json:
                         eachLuaJson[colStruct._name] = rowData[col]
 
         if haveClient:
-            self.dealJsonData(totalJson)
+            self.deal_json_data(totalJson)
         # else:
         #     print('\t\t【{0}】不需要导出json'.format(self.sheet.title))
 
         if haveServer:
-            self.dealLuaData(luaJson)
+            self.deal_lua_data(luaJson)
         # else:
         #     print("\t\t【{0}】不需要导出lua".format(self.sheet.title))
 
-    def dealJsonData(self, obj: dict) -> None:
+    def deal_json_data(self, obj: dict) -> None:
         """ 导出json数据 """
         struct = self.sheetStruct
         if not struct.clientName:
@@ -269,10 +269,10 @@ class Excel2Json:
             json.dump(obj, outfile, indent=2, ensure_ascii=False)
             # outfile.write(json.dumps(obj, indent=4, ensure_ascii=True))
 
-        self.dealCfglistJson(struct.clientName)
-        self.dealConfigTs(struct.clientName)
+        self.deal_cfglist_json(struct.clientName)
+        self.deal_config_ts(struct.clientName)
 
-    def dealLuaData(self, obj: dict) -> None:
+    def deal_lua_data(self, obj: dict) -> None:
         """ 导出lua数据 """
         struct = self.sheetStruct
         if not struct.serverName:
@@ -290,19 +290,19 @@ class Excel2Json:
         wf.write(luaStr + json2lua.dic_to_lua_str(obj))
         wf.close()
 
-    def dealCfglistJson(self, clientName: str) -> None:
+    def deal_cfglist_json(self, client_name: str) -> None:
         """ 处理 cfglist.json 文件 """
         # print('start to export cfglist.json file')
-        cfglistjson.dealCfglistJson(clientName, self.outputRoot)
+        cfglistjson.deal_cfglist_json(client_name, self.outputRoot)
         # print('write cfglist.json successful!!!')
 
-    def dealConfigTs(self, clientName: str) -> None:
+    def deal_config_ts(self, client_name: str) -> None:
         """ 导出config.d.ts文件 待处理 """
         # print('start to export config.ts file')
-        dataDict: dict = self.getDataStruct()  # 传入结构体
+        dataDict: dict = self.get_data_struct()  # 传入结构体
         struct = configts.ConfigInterfaceStruct()
-        struct.clientName = clientName
+        struct.clientName = client_name
         struct.clientNameDef = self.sheet.title
         struct.dataObj = dataDict
         struct.outputRoot = self.outputRoot
-        configts.dealConfigTs(struct)
+        configts.deal_config_ts(struct)

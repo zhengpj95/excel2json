@@ -23,10 +23,10 @@ def dic_to_lua_str(data, layer=0):
         return str(data)
     elif d_type is list:
         lua_str = "{\n"
-        lua_str += space_str(layer+1)
+        lua_str += space_str(layer + 1)
         for i in range(0, len(data)):
-            lua_str += dic_to_lua_str(data[i], layer+1)
-            if i < len(data)-1:
+            lua_str += dic_to_lua_str(data[i], layer + 1)
+            if i < len(data) - 1:
                 lua_str += ','
         lua_str += '\n'
         lua_str += space_str(layer)
@@ -41,7 +41,7 @@ def dic_to_lua_str(data, layer=0):
         data_count = 0
         for k, v in data.items():
             data_count += 1
-            lua_str += space_str(layer+1)
+            lua_str += space_str(layer + 1)
             if type(k) is int:
                 lua_str += '[' + str(k) + ']'
             else:

@@ -6,21 +6,21 @@
 import re
 
 
-def strToList(lab: str):
+def str_to_list(lab: str):
     stack = []
 
     while True:
         # print(lab, stack)
-        if (not lab):
+        if not lab:
             break
         if lab[0] == '[':
             stack.append('[')
             lab = lab[1:]
         elif lab[0] == ']':
             smallList = []
-            while (len(stack) > 0):
-                pop = stack[len(stack)-1]
-                if (pop == '['):
+            while len(stack) > 0:
+                pop = stack[len(stack) - 1]
+                if pop == '[':
                     stack.pop()
                     stack.append(smallList)
                     break
@@ -33,14 +33,14 @@ def strToList(lab: str):
             idx = lab.find(',')
             idx2 = lab.find(']')
             haveSmallList = False
-            if ((idx2 > idx and idx == -1) or (idx != -1 and idx2 < idx)):
+            if (idx2 > idx and idx == -1) or (idx != -1 and idx2 < idx):
                 idx = idx2
                 haveSmallList = True
             stack.append(lab[0:idx].strip())
             if haveSmallList:
                 lab = lab[idx:]
             else:
-                lab = lab[idx+1:]
+                lab = lab[idx + 1:]
     if len(stack) == 1:
         stack = stack.pop()
     # print(stack, len(stack))
@@ -65,7 +65,8 @@ def dealNumberList(array):
                 result.append('')
             else:
                 # 字符串类型的，如果前后有双引号或单引号，需要去掉
-                if type(item).__name__ == 'str' and ((item[0] == '"' and item[-1] == '"') or (item[0] == "'" and item[-1] == "'")):
+                if type(item).__name__ == 'str' and (
+                        (item[0] == '"' and item[-1] == '"') or (item[0] == "'" and item[-1] == "'")):
                     item = item[1:-1]
                 result.append(item)
     return result

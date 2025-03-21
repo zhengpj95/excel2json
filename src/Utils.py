@@ -14,7 +14,7 @@ SERVER_ROOT = path.normpath(path.join(OUTPUT_ROOT, './server'))
 class Utils:
 
     @staticmethod
-    def readFileList(dir_path: str, extname: str = 'xlsx', filter_str: str = "00") -> list:
+    def read_file_list(dir_path: str, extname: str = 'xlsx', filter_str: str = "00") -> list:
         """ 读取dir下的所有文件扩展名==extname的文件 """
         if not path.exists(dir_path):
             print('路径错误：' + dir_path)
