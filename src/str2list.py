@@ -44,15 +44,15 @@ def str_to_list(lab: str):
     if len(stack) == 1:
         stack = stack.pop()
     # print(stack, len(stack))
-    return dealNumberList(stack)
+    return deal_number_list(stack)
 
 
-def dealNumberList(array):
+def deal_number_list(array):
     result = []
     for item in array:
         # print(item, item == '')
         if type(item).__name__ == 'list':
-            res = dealNumberList(item)
+            res = deal_number_list(item)
             result.append(res)
         else:
             if is_number(item):

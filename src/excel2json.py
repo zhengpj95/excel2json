@@ -32,7 +32,7 @@ class SheetStruct:
         pass
 
     # 特殊的格式
-    def spcialType(self):
+    def specialType(self):
         pass
 
     # sheet名称
@@ -48,19 +48,19 @@ class DataStruct:
     """ 导出数据的结构体信息 """
 
     # 字段名
-    def _name(self):
+    def name(self):
         pass
 
     # 类型 (number, string, array, object)
-    def _type(self):
+    def type(self):
         pass
 
     # 导出字段（S服务端C客户端）
-    def _cs(self):
+    def cs(self):
         pass
 
     # 字段名注释
-    def _def(self):
+    def definition(self):
         pass
 
 
@@ -118,7 +118,7 @@ class Excel2Json:
         struct.serverName = serverName
         struct.clientName = clientName
         struct.keyCount = keyCount
-        struct.spcialType = specialType == 1
+        struct.specialType = specialType == 1
         struct.sheetTitle = self.sheet.title
         struct.xlsxTitle = self.get_xlsx_title()
         self.sheetStruct = struct
@@ -146,10 +146,10 @@ class Excel2Json:
         self.structColLen = len(row5)
         for i in range(0, len(row5)):
             struct = DataStruct()
-            struct._name = row5[i]
-            struct._type = row6[i]
-            struct._cs = row7[i]
-            struct._def = row4[i]
+            struct.name = row5[i]
+            struct.type = row6[i]
+            struct.cs = row7[i].upper()
+            struct.definition = row4[i]
             dataDict[i] = struct
         return dataDict
 
@@ -160,7 +160,7 @@ class Excel2Json:
         # print(sheet.max_row, sheet.max_column)
         # print('start to deal sheet: ', self.sheet.title)
 
-        if self.sheetStruct.spcialType:
+        if self.sheetStruct.specialType:
             self.deal_special_reach_row_data()
         else:
             self.deal_each_row_data()
@@ -181,15 +181,15 @@ class Excel2Json:
 
             totalJson[rowData[0]] = eachRowJson = {}
             col0: DataStruct = dataStruct[0]  # key
-            eachRowJson[col0._name] = rowData[0]
+            eachRowJson[col0.name] = rowData[0]
             col3: DataStruct = dataStruct[3]  # value
 
             if rowData[1] == 'array':
-                eachRowJson[col3._name] = str2list.str_to_list(rowData[3])
+                eachRowJson[col3.name] = str2list.str_to_list(rowData[3])
             elif rowData[1] == 'object':
-                eachRowJson[col3._name] = json.loads(rowData[3])
+                eachRowJson[col3.name] = json.loads(rowData[3])
             else:
-                eachRowJson[col3._name] = rowData[3]
+                eachRowJson[col3.name] = rowData[3]
 
         self.deal_json_data(totalJson)
 
@@ -205,9 +205,9 @@ class Excel2Json:
         for idx in range(0, len(dataStruct)):
             if haveClient is True and haveServer is True:
                 break
-            if 'C' in dataStruct[idx]._cs and haveClient is False:
+            if 'C' in dataStruct[idx].cs and haveClient is False:
                 haveClient = True
-            if 'S' in dataStruct[idx]._cs and haveServer is False:
+            if 'S' in dataStruct[idx].cs and haveServer is False:
                 haveServer = True
 
         totalKey = self.sheetStruct.keyCount  # 表中配置的key数量
@@ -231,22 +231,22 @@ class Excel2Json:
 
             for col in range(0, self.structColLen):
                 colStruct: DataStruct = dataStruct[col]
-                if 'C' in colStruct._cs:
-                    if colStruct._type == 'array':
-                        eachRowJson[colStruct._name] = str2list.str_to_list(
+                if 'C' in colStruct.cs:
+                    if colStruct.type == 'array':
+                        eachRowJson[colStruct.name] = str2list.str_to_list(
                             rowData[col])
-                    elif colStruct._type == 'object':
-                        eachRowJson[colStruct._name] = json.loads(rowData[col])
+                    elif colStruct.type == 'object':
+                        eachRowJson[colStruct.name] = json.loads(rowData[col])
                     else:
-                        eachRowJson[colStruct._name] = rowData[col]
-                if 'S' in colStruct._cs:
-                    if colStruct._type == 'array':
-                        eachLuaJson[colStruct._name] = str2list.str_to_list(
+                        eachRowJson[colStruct.name] = rowData[col]
+                if 'S' in colStruct.cs:
+                    if colStruct.type == 'array':
+                        eachLuaJson[colStruct.name] = str2list.str_to_list(
                             rowData[col])
-                    elif colStruct._type == 'object':
-                        eachLuaJson[colStruct._name] = json.loads(rowData[col])
+                    elif colStruct.type == 'object':
+                        eachLuaJson[colStruct.name] = json.loads(rowData[col])
                     else:
-                        eachLuaJson[colStruct._name] = rowData[col]
+                        eachLuaJson[colStruct.name] = rowData[col]
 
         if haveClient:
             self.deal_json_data(totalJson)
