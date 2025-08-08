@@ -66,16 +66,16 @@ def deal_config_ts(struct: ConfigInterfaceStruct) -> None:
     for key in sorted(tmpObj):
         newtsStr = newtsStr + '\n' + tmpObj[key] + '\n'
         tsKey = key.replace(".json", "")
-        configNameTsStr = configNameTsStr + "  " + tsKey + '= "' + tsKey + '",\n'
+        configNameTsStr = configNameTsStr + "  " + tsKey + ' = "' + tsKey + '",\n'
 
     configNameTsStr = configNameTsStr + "}\n"
 
     tsconfigDir = os.path.normpath(os.path.join(outputRoot + '/' + configFileName))  # 导出路径
-    with open(tsconfigDir, 'w', encoding='utf-8') as writefile:
+    with open(tsconfigDir, 'w', encoding='utf-8', newline='\n') as writefile:
         writefile.write(newtsStr)
     # print('write ' + configFileName +' successful!!!')
     tsconfigNameDir = os.path.normpath(os.path.join(outputRoot + "/" + configNameFileName))
-    with open(tsconfigNameDir, 'w', encoding='utf-8') as writefile:
+    with open(tsconfigNameDir, 'w', encoding='utf-8', newline='\n') as writefile:
         writefile.write(configNameTsStr)
 
 
@@ -93,7 +93,7 @@ def read_tmp_json() -> dict:
 
 def write_tmp_json(obj_dict: dict) -> None:
     """ 写入缓存文件 """
-    with open(tmpFilePath, 'w', encoding='utf-8') as writefile:
+    with open(tmpFilePath, 'w', encoding='utf-8', newline='\n') as writefile:
         json.dump(obj_dict, writefile, indent=2, ensure_ascii=False)
 
 

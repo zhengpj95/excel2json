@@ -17,7 +17,7 @@ def deal_sheet_index_file(xlsx_title: str, sheet_title: str, json_name: str) -> 
     # print('11111 dealSheetIndexFile---', xlsx_title, sheet_title, json_name, filePath)
     flagStr = xlsx_title + ' = ' + sheet_title + '[' + json_name + ']'
     if not path.exists(filePath) or path.getsize(filePath) == 0:
-        with open(filePath, 'w', encoding='utf-8') as writefile:
+        with open(filePath, 'w', encoding='utf-8', newline='\n') as writefile:
             writefile.write(flagStr)
         return
 
@@ -47,7 +47,7 @@ def deal_sheet_index_file(xlsx_title: str, sheet_title: str, json_name: str) -> 
         else:
             rewriteStr = rewriteStr + '\n' + singleXlsxStr
     # print("rewriteStr: ", rewriteStr)
-    with open(filePath, 'w', encoding='utf-8') as writefile:
+    with open(filePath, 'w', encoding='utf-8', newline='\n') as writefile:
         writefile.write(rewriteStr + "\n")
 
 

@@ -16,7 +16,7 @@ def deal_cfglist_json(client_name: str, output_root: str) -> None:
 
     if not os.path.exists(cfglistjson_dir) or os.path.getsize(cfglistjson_dir) == 0:
         # 第一次写入cfglist.json文件，或者文件为空的。w写入方式
-        with open(cfglistjson_dir, 'w', encoding='utf-8') as outfile:
+        with open(cfglistjson_dir, 'w', encoding='utf-8', newline='\n') as outfile:
             ary = [client_name]  # json文件名数组
             json.dump(ary, outfile, indent=2, ensure_ascii=False)
     else:
