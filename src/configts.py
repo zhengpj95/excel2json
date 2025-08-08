@@ -50,7 +50,7 @@ def deal_config_ts(struct: ConfigInterfaceStruct) -> None:
             if data.type == 'array':
                 valType = 'any[]'
             elif data.type == 'object':
-                valType = 'any'
+                valType = 'Record<string | number, any>'
             tsStr = tsStr + '\n  /** ' + data.definition + ' */'
             tsStr = tsStr + '\n  readonly ' + data.name + ': ' + valType + ';'
             # print(data.cs, data.type, data.name, data.definition)
