@@ -239,7 +239,7 @@ class Excel2Json:
             # print(self.xlslUrl + ' --- 客户端配置名为空 -- 不导出json')
             return
 
-        with open(self.output_root + "/" + struct.client_name, "w", encoding='utf-8') as outfile:
+        with open(self.output_root + "/" + struct.client_name, "w", encoding='utf-8', newline='\n') as outfile:
             json.dump(obj, outfile, indent=2, ensure_ascii=False)
             # outfile.write(json.dumps(obj, indent=4, ensure_ascii=True))
 

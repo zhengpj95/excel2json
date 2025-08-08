@@ -40,5 +40,5 @@ def deal_cfglist_json(client_name: str, output_root: str) -> None:
                 newJsonAry = jsonAry
         # 重新写入 （和上面一步整合）
         if newJsonAry and len(newJsonAry) > 0:
-            with open(cfglistjson_dir, 'w') as cfglistjson:
+            with open(cfglistjson_dir, 'w', encoding='utf-8', newline='\n') as cfglistjson:
                 json.dump(newJsonAry, cfglistjson, indent=2, ensure_ascii=False)
