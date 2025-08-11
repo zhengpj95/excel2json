@@ -2,10 +2,10 @@
 把 excel 导出 json | lua
 """
 
+import ast
 import json
 import os
 import time
-import ast
 
 from openpyxl import load_workbook
 from openpyxl.worksheet import worksheet
@@ -150,7 +150,7 @@ class Excel2Json:
 
         totalJson = {}
         for row in range(self.start_row, self.sheet.max_row + 1):
-            rowData: DataStruct = self.get_row_value(row)
+            rowData: list = self.get_row_value(row) # [key, type, outputType, value]
             if len(rowData) == 0 or rowData[0] is None or 'C' not in rowData[2]:
                 break
 

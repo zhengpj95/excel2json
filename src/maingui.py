@@ -36,8 +36,8 @@ listbox.focus_set()  # 让 Listbox 获取焦点（可选）
 # 导出所有
 def export_all_func():
     print('** print selected: All')
-    for file in files:
-        filePath = path.normpath(path.join(xlsxRoot, file))
+    for fileItem in files:
+        filePath = path.normpath(path.join(xlsxRoot, fileItem))
         excel2Json = Excel2Json(filePath, outputRoot)
         excel2Json.read_file()
 

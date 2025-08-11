@@ -19,6 +19,10 @@ if __name__ == '__main__':
         if sys.argv and len(sys.argv) > 2 and sys.argv[2]:
             output_root = os.path.join(sys.argv[2])
 
+        if not output_root or not xlsx_url:
+            print("ERROR: 请拖拽excel文件到脚本上")
+            exit()
+
         # 若导出路径不存在，创建
         if not os.path.exists(output_root):
             os.makedirs(output_root)

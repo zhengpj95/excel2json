@@ -44,7 +44,7 @@ def deal_config_ts(struct: ConfigInterfaceStruct) -> None:
     tsStr = '/** ' + clientNameDef + ' */\n'
     tsStr = tsStr + 'export interface ' + clientName.replace('.json', '') + ' {'
     for idx in range(0, len(dataObj)):
-        data: dict = dataObj[idx]
+        data = dataObj[idx] # DataStruct
         if 'C' in data.cs or 'c' in data.cs:
             valType = data.type
             if data.type == 'array':

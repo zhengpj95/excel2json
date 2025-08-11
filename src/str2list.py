@@ -33,7 +33,7 @@ def str_to_list(lab: str):
             idx = lab.find(',')
             idx2 = lab.find(']')
             haveSmallList = False
-            if (idx2 > idx and idx == -1) or (idx != -1 and idx2 < idx):
+            if (idx == -1 and idx2 > idx) or (idx != -1 and idx2 < idx):
                 idx = idx2
                 haveSmallList = True
             stack.append(lab[0:idx].strip())
