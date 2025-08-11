@@ -49,6 +49,14 @@ def deal_config_ts(struct: ConfigInterfaceStruct) -> None:
             valType = data.type
             if data.type == 'array':
                 valType = 'any[]'
+            elif data.type == "number[]":
+                valType = 'number[]'
+            elif data.type == "string[]":
+                valType = 'string[]'
+            elif data.type == 'number[][]':
+                valType = 'number[][]'
+            elif data.type == 'string[][]':
+                valType = 'string[][]'
             elif data.type == 'object':
                 valType = 'Record<string | number, any>'
             tsStr = tsStr + '\n  /** ' + data.definition + ' */'

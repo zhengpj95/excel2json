@@ -5,6 +5,7 @@
 import json
 import os
 import time
+import ast
 
 from openpyxl import load_workbook
 from openpyxl.worksheet import worksheet
@@ -211,6 +212,8 @@ class Excel2Json:
                             rowData[col])
                     elif colStruct.type == 'object':
                         eachRowJson[colStruct.name] = json.loads(rowData[col])
+                    elif colStruct.type == 'number[]' or colStruct.type == 'string[]' or colStruct.type == 'number[][]' or colStruct.type == 'string[][]':
+                        eachRowJson[colStruct.name] = ast.literal_eval(rowData[col])
                     else:
                         eachRowJson[colStruct.name] = rowData[col]
                 if 'S' in colStruct.cs:
@@ -219,6 +222,8 @@ class Excel2Json:
                             rowData[col])
                     elif colStruct.type == 'object':
                         eachLuaJson[colStruct.name] = json.loads(rowData[col])
+                    elif colStruct.type == 'number[]' or colStruct.type == 'string[]' or colStruct.type == 'number[][]' or colStruct.type == 'string[][]':
+                        eachRowJson[colStruct.name] = ast.literal_eval(rowData[col])
                     else:
                         eachLuaJson[colStruct.name] = rowData[col]
 
