@@ -150,7 +150,7 @@ class Excel2Json:
 
         totalJson = {}
         for row in range(self.start_row, self.sheet.max_row + 1):
-            rowData: list = self.get_row_value(row) # [key, type, outputType, value]
+            rowData: list = self.get_row_value(row)  # [key, type, outputType, value]
             if len(rowData) == 0 or rowData[0] is None or 'C' not in rowData[2]:
                 break
 
@@ -223,7 +223,7 @@ class Excel2Json:
                     elif colStruct.type == 'object':
                         eachLuaJson[colStruct.name] = json.loads(rowData[col])
                     elif colStruct.type == 'number[]' or colStruct.type == 'string[]' or colStruct.type == 'number[][]' or colStruct.type == 'string[][]':
-                        eachRowJson[colStruct.name] = ast.literal_eval(rowData[col])
+                        eachLuaJson[colStruct.name] = ast.literal_eval(rowData[col])
                     else:
                         eachLuaJson[colStruct.name] = rowData[col]
 
